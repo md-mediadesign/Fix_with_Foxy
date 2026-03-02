@@ -40,7 +40,8 @@ export async function sendMessage(jobId: string, content: string) {
 
   // Create notification for the other party
   const recipientUserId = isClient
-    ? job.bids.find((b) => b.status === "AWARDED" || b.status === "PENDING")?.provider.userId
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ? job.bids.find((b: any) => b.status === "AWARDED" || b.status === "PENDING")?.provider.userId
     : job.client.userId;
 
   if (recipientUserId) {
