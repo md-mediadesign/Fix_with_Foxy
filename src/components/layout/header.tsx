@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Wrench } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useState } from "react";
 import { useTranslations } from "@/components/locale-provider";
 import { LanguageSwitcher } from "@/components/language-switcher";
@@ -16,10 +17,15 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-            <Wrench className="h-5 w-5 text-primary-foreground" />
-          </div>
-          <span className="text-xl font-bold tracking-tight">Werkspot</span>
+          <Image
+            src="/logo.png"
+            alt="Fix it with Foxy Logo"
+            width={36}
+            height={36}
+            className="h-9 w-9 object-contain"
+            unoptimized
+          />
+          <span className="text-xl font-bold tracking-tight">Fix it with Foxy</span>
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">

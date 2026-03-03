@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   Sheet,
@@ -14,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import {
-  Menu, Wrench, LogOut, LayoutDashboard, Briefcase, PlusCircle, UserCircle,
+  Menu, LogOut, LayoutDashboard, Briefcase, PlusCircle, UserCircle,
   Search, FileText, Star, User, CreditCard, Shield, Users, FolderOpen,
   Tags, ScrollText, ClipboardList,
 } from "lucide-react";
@@ -25,7 +26,7 @@ import type { NavigationItem } from "@/components/layout/dashboard-shell";
 const ICON_MAP: Record<string, React.ElementType> = {
   LayoutDashboard, Briefcase, PlusCircle, UserCircle, Search, FileText,
   Star, User, CreditCard, Shield, Users, FolderOpen, Tags, ScrollText,
-  ClipboardList, LogOut, Wrench,
+  ClipboardList, LogOut,
 };
 
 interface MobileSidebarProps {
@@ -63,11 +64,16 @@ export function MobileSidebar({
               className="flex items-center gap-2"
               onClick={() => setOpen(false)}
             >
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                <Wrench className="h-4 w-4 text-primary-foreground" />
-              </div>
+              <Image
+                src="/logo.png"
+                alt="Fix it with Foxy Logo"
+                width={32}
+                height={32}
+                className="h-8 w-8 object-contain"
+                unoptimized
+              />
               <span className="text-lg font-bold tracking-tight">
-                Werkspot
+                Fix it with Foxy
               </span>
             </Link>
           </SheetTitle>

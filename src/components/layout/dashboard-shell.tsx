@@ -1,5 +1,6 @@
 import { auth, signOut } from "@/lib/auth";
 import Link from "next/link";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -58,10 +59,15 @@ export async function DashboardShell({
       <aside className="hidden w-64 shrink-0 border-r bg-muted/30 md:flex md:flex-col">
         <div className="flex h-16 items-center gap-2 px-6">
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-              <Wrench className="h-4 w-4 text-primary-foreground" />
-            </div>
-            <span className="text-lg font-bold tracking-tight">Werkspot</span>
+            <Image
+              src="/logo.png"
+              alt="Fix it with Foxy Logo"
+              width={32}
+              height={32}
+              className="h-8 w-8 object-contain"
+              unoptimized
+            />
+            <span className="text-lg font-bold tracking-tight">Fix it with Foxy</span>
           </Link>
         </div>
         <Separator />
