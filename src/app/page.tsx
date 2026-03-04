@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -31,7 +32,7 @@ const CATEGORIES = [
   { name: "Sanitär & Heizung", slug: "sanitaer-heizung", icon: Droplets, color: "bg-blue-50 text-blue-700" },
   { name: "Malerei", slug: "malerei-lackierung", icon: Paintbrush, color: "bg-pink-50 text-pink-700" },
   { name: "Garten", slug: "garten-landschaft", icon: TreePine, color: "bg-green-50 text-green-700" },
-  { name: "Reinigung", slug: "reinigung", icon: Sparkles, color: "bg-purple-50 text-purple-700" },
+  { name: "Reinigung", slug: "reinigung", icon: Sparkles, color: "bg-purple-50 text-purple-700", image: "/categories/cleaner.png" },
   { name: "Umzug", slug: "umzug-transport", icon: Truck, color: "bg-orange-50 text-orange-700" },
   { name: "Schreiner", slug: "schreiner-tischler", icon: Hammer, color: "bg-amber-50 text-amber-700" },
   { name: "Dach & Fassade", slug: "dach-fassade", icon: Home, color: "bg-red-50 text-red-700" },
@@ -133,9 +134,13 @@ export default async function LandingPage() {
                   <Card className="group cursor-pointer border transition-all hover:border-primary/30 hover:shadow-md">
                     <CardContent className="flex flex-col items-center gap-3 p-4 text-center">
                       <div
-                        className={`flex h-12 w-12 items-center justify-center rounded-xl ${cat.color} transition-transform group-hover:scale-110`}
+                        className={`flex h-12 w-12 items-center justify-center rounded-xl ${cat.color} transition-transform group-hover:scale-110 overflow-hidden`}
                       >
-                        <Icon className="h-6 w-6" />
+                        {"image" in cat && cat.image ? (
+                          <Image src={cat.image} alt={cat.name} width={48} height={48} className="h-12 w-12 object-cover" />
+                        ) : (
+                          <Icon className="h-6 w-6" />
+                        )}
                       </div>
                       <span className="text-sm font-medium">{cat.name}</span>
                     </CardContent>
