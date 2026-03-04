@@ -2,7 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { getServerTranslations } from "@/lib/i18n/server";
@@ -25,6 +24,7 @@ import {
   Shield,
   Clock,
   Users,
+  HandHelping,
 } from "lucide-react";
 
 const CATEGORIES = [
@@ -39,6 +39,7 @@ const CATEGORIES = [
   { name: "Fliesen & Boden", slug: "fliesen-boden", icon: LayoutGrid, color: "bg-teal-50 text-teal-700" },
   { name: "Schlüsseldienst", slug: "schluesseldienst", icon: KeyRound, color: "bg-indigo-50 text-indigo-700" },
   { name: "Montage", slug: "montage-aufbau", icon: Wrench, color: "bg-slate-50 text-slate-700" },
+  { name: "Einfache Hilfe & Tagesjobs", slug: "einfache-hilfe-tagesjobs", icon: HandHelping, color: "bg-rose-50 text-rose-700" },
   { name: "Sonstiges", slug: "sonstiges", icon: MoreHorizontal, color: "bg-gray-50 text-gray-700" },
 ];
 
@@ -79,19 +80,18 @@ export default async function LandingPage() {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
+        <div className="mx-auto max-w-7xl px-4 pt-10 pb-20 sm:px-6 sm:pt-16 sm:pb-28 lg:px-8 lg:pt-20 lg:pb-36">
           <div className="mx-auto max-w-3xl text-center">
-            <Badge variant="secondary" className="mb-6 px-4 py-1.5 text-sm">
-              {t.landing.badgeFree}
-            </Badge>
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              {t.landing.heroTitle}
+              Finde den perfekten{" "}
+              <span className="text-orange-500">Handwerker</span>{" "}
+              für dein Projekt
             </h1>
             <p className="mt-6 text-lg text-muted-foreground sm:text-xl">
               {t.landing.heroSubtitle}
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button size="lg" className="w-full sm:w-auto" asChild>
+              <Button size="lg" className="w-full sm:w-auto px-6" asChild>
                 <Link href="/registrieren/kunde">
                   {t.landing.ctaButton}
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -101,7 +101,7 @@ export default async function LandingPage() {
                 <Link href="/registrieren/anbieter">{t.landing.becomeProvider}</Link>
               </Button>
             </div>
-            <div className="mt-8 flex items-center justify-center gap-6 text-sm text-muted-foreground">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <CheckCircle2 className="h-4 w-4 text-green-600" />
                 {t.common.free}
@@ -114,7 +114,43 @@ export default async function LandingPage() {
                 <Shield className="h-4 w-4 text-purple-600" />
                 {t.landing.badgeVerifiedProviders}
               </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                Einfach
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Clock className="h-4 w-4 text-blue-600" />
+                Schnell
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Shield className="h-4 w-4 text-purple-600" />
+                Sicher
+              </span>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section className="bg-muted/30 py-16 sm:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold tracking-tight">{t.landing.howItWorksTitle}</h2>
+            <p className="mt-3 text-muted-foreground">{t.howItWorks.subtitle}</p>
+          </div>
+          <div className="mt-12 grid gap-8 md:grid-cols-3">
+            {STEPS.map((step) => (
+              <div key={step.step} className="relative text-center">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-3xl">
+                  {step.icon}
+                </div>
+                <div className="absolute -top-2 left-1/2 flex h-7 w-7 -translate-x-1/2 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                  {step.step}
+                </div>
+                <h3 className="mt-6 text-lg font-semibold">{step.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{step.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -152,30 +188,6 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="bg-muted/30 py-16 sm:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold tracking-tight">{t.landing.howItWorksTitle}</h2>
-            <p className="mt-3 text-muted-foreground">{t.howItWorks.subtitle}</p>
-          </div>
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
-            {STEPS.map((step) => (
-              <div key={step.step} className="relative text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-3xl">
-                  {step.icon}
-                </div>
-                <div className="absolute -top-2 left-1/2 flex h-7 w-7 -translate-x-1/2 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-                  {step.step}
-                </div>
-                <h3 className="mt-6 text-lg font-semibold">{step.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{step.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Stats */}
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -190,27 +202,6 @@ export default async function LandingPage() {
                 </div>
               );
             })}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA for providers */}
-      <section className="bg-muted/30 py-16 sm:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight">{t.landing.pricingTitle}</h2>
-            <p className="mt-3 text-muted-foreground">{t.landing.pricingSubtitle}</p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button size="lg" asChild>
-                <Link href="/registrieren/anbieter">
-                  {t.pricing.startTrial}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild>
-                <Link href="/preise">{t.landing.pricingCta}</Link>
-              </Button>
-            </div>
           </div>
         </div>
       </section>

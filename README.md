@@ -24,7 +24,7 @@ Werkspot ist eine Marktplatz-Plattform, die Auftraggeber mit Handwerkern und Die
 ### 1. Repository klonen & Abhaengigkeiten installieren
 
 ```bash
-cd werkspot
+cd Fix_with_Foxy
 npm install
 ```
 
@@ -70,7 +70,7 @@ App oeffnen: [http://localhost:3000](http://localhost:3000)
 ## Projektstruktur
 
 ```
-werkspot/
+Fix_with_Foxy/
 ├── prisma/
 │   ├── schema.prisma       # Datenmodell
 │   └── seed.ts             # Seed-Daten
