@@ -49,12 +49,12 @@ export function Header() {
           </Link>
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-2 md:flex">
           <LanguageSwitcher />
-          <Button variant="ghost" asChild>
+          <Button variant="ghost" className="py-1.5 px-3" asChild>
             <Link href="/anmelden">{t.nav.login}</Link>
           </Button>
-          <Button asChild>
+          <Button className="py-1.5 px-3" asChild>
             <Link href="/registrieren">{t.nav.register}</Link>
           </Button>
         </div>
@@ -68,29 +68,29 @@ export function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px]">
-              <nav className="flex flex-col gap-4 pt-8">
+              <nav className="flex flex-col gap-4 pt-8 items-end pr-4">
                 <Link
                   href="/so-funktionierts"
-                  className="text-lg font-medium"
+                  className="text-lg font-medium text-right"
                   onClick={() => setOpen(false)}
                 >
                   {t.nav.howItWorks}
                 </Link>
                 <Link
                   href="/kategorien"
-                  className="text-lg font-medium"
+                  className="text-lg font-medium text-right"
                   onClick={() => setOpen(false)}
                 >
                   {t.nav.categories}
                 </Link>
                 <Link
                   href="/preise"
-                  className="text-lg font-medium"
+                  className="text-lg font-medium text-right"
                   onClick={() => setOpen(false)}
                 >
                   {t.nav.forCraftsmen}
                 </Link>
-                <div className="mt-4 flex flex-col gap-2">
+                <div className="flex flex-col gap-4 w-full items-end">
                   <Button variant="outline" asChild>
                     <Link href="/anmelden" onClick={() => setOpen(false)}>
                       {t.nav.login}
