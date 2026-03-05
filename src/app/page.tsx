@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { getServerTranslations } from "@/lib/i18n/server";
@@ -167,19 +167,21 @@ export default async function LandingPage() {
               const Icon = cat.icon;
               return (
                 <Link key={cat.slug} href={`/registrieren/kunde?kategorie=${cat.slug}`}>
-                  <Card className="group cursor-pointer border transition-all hover:border-primary/30 hover:shadow-md">
-                    <CardContent className="flex flex-col items-center gap-3 p-4 text-center">
-                      <div
-                        className={`flex h-12 w-12 items-center justify-center rounded-xl ${cat.color} transition-transform group-hover:scale-110 overflow-hidden`}
-                      >
-                        {"image" in cat && cat.image ? (
-                          <Image src={cat.image} alt={cat.name} width={48} height={48} className="h-12 w-12 object-cover" />
-                        ) : (
-                          <Icon className="h-6 w-6" />
-                        )}
-                      </div>
+                  <Card className="group cursor-pointer border transition-all hover:border-primary/30 hover:shadow-md overflow-hidden">
+                    <div className={`relative aspect-square ${cat.color}`}>
+                      {"image" in cat && cat.image ? (
+                        <div className="absolute inset-[15%] transition-transform group-hover:scale-110">
+                          <Image src={cat.image} alt={cat.name} fill className="object-contain" />
+                        </div>
+                      ) : (
+                        <div className="flex h-full items-center justify-center">
+                          <Icon className="h-2/5 w-2/5 transition-transform group-hover:scale-110" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-3 text-center">
                       <span className="text-sm font-medium">{cat.name}</span>
-                    </CardContent>
+                    </div>
                   </Card>
                 </Link>
               );
