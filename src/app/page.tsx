@@ -28,17 +28,17 @@ import {
 } from "lucide-react";
 
 const CATEGORIES = [
-  { name: "Elektrik", slug: "elektrik", icon: Zap, color: "bg-yellow-50 text-yellow-700" },
-  { name: "Sanitär & Heizung", slug: "sanitaer-heizung", icon: Droplets, color: "bg-blue-50 text-blue-700" },
-  { name: "Malerei", slug: "malerei-lackierung", icon: Paintbrush, color: "bg-pink-50 text-pink-700" },
-  { name: "Garten", slug: "garten-landschaft", icon: TreePine, color: "bg-green-50 text-green-700" },
+  { name: "Elektrik", slug: "elektrik", icon: Zap, color: "bg-yellow-50 text-yellow-700", image: "/categories/elektrik.png" },
+  { name: "Sanitär & Heizung", slug: "sanitaer-heizung", icon: Droplets, color: "bg-blue-50 text-blue-700", image: "/categories/sanitaer.png" },
+  { name: "Malerei", slug: "malerei-lackierung", icon: Paintbrush, color: "bg-pink-50 text-pink-700", image: "/categories/maler.png" },
+  { name: "Garten", slug: "garten-landschaft", icon: TreePine, color: "bg-green-50 text-green-700", image: "/categories/gaertner.png" },
   { name: "Reinigung", slug: "reinigung", icon: Sparkles, color: "bg-purple-50 text-purple-700", image: "/categories/cleaner.png" },
   { name: "Umzug", slug: "umzug-transport", icon: Truck, color: "bg-orange-50 text-orange-700" },
   { name: "Schreiner", slug: "schreiner-tischler", icon: Hammer, color: "bg-amber-50 text-amber-700" },
   { name: "Dach & Fassade", slug: "dach-fassade", icon: Home, color: "bg-red-50 text-red-700" },
   { name: "Fliesen & Boden", slug: "fliesen-boden", icon: LayoutGrid, color: "bg-teal-50 text-teal-700" },
   { name: "Schlüsseldienst", slug: "schluesseldienst", icon: KeyRound, color: "bg-indigo-50 text-indigo-700" },
-  { name: "Montage", slug: "montage-aufbau", icon: Wrench, color: "bg-slate-50 text-slate-700" },
+  { name: "Montage", slug: "montage-aufbau", icon: Wrench, color: "bg-slate-50 text-slate-700", image: "/categories/montage.jpg" },
   { name: "Einfache Hilfe & Tagesjobs", slug: "einfache-hilfe-tagesjobs", icon: HandHelping, color: "bg-rose-50 text-rose-700" },
   { name: "Sonstiges", slug: "sonstiges", icon: MoreHorizontal, color: "bg-gray-50 text-gray-700" },
 ];
