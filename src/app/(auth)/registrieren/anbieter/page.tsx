@@ -1,8 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+
+const LocationPicker = dynamic(
+  () => import("@/components/ui/location-picker").then((m) => m.LocationPicker),
+  { ssr: false, loading: () => <div className="h-[280px] animate-pulse rounded-xl bg-muted" /> }
+);
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -269,38 +275,20 @@ export default function AnbieterRegistrierenPage() {
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="city">{t.auth.city}</Label>
-                  <Input
-                    id="city"
-                    type="text"
-                    placeholder={t.auth.cityPlaceholder}
-                    disabled={isLoading}
-                    {...register("city")}
-                  />
-                  {errors.city && (
-                    <p className="text-sm text-destructive">
-                      {errors.city.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="zipCode">{t.auth.zipCode}</Label>
-                  <Input
-                    id="zipCode"
-                    type="text"
-                    placeholder={t.auth.zipCodePlaceholder}
-                    disabled={isLoading}
-                    {...register("zipCode")}
-                  />
-                  {errors.zipCode && (
-                    <p className="text-sm text-destructive">
-                      {errors.zipCode.message}
-                    </p>
-                  )}
-                </div>
+              <div className="space-y-2">
+                <Label>Standort</Label>
+                <LocationPicker
+                  disabled={isLoading}
+                  onLocationChange={(city, zipCode) => {
+                    setValue("city", city, { shouldValidate: true });
+                    setValue("zipCode", zipCode, { shouldValidate: true });
+                  }}
+                />
+                {(errors.city || errors.zipCode) && (
+                  <p className="text-sm text-destructive">
+                    Bitte wähle deinen Standort auf der Karte aus.
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
