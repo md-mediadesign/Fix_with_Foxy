@@ -2,105 +2,86 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { Menu, Home } from "lucide-react";
 import { useState } from "react";
-import { useTranslations } from "@/components/locale-provider";
-import { LanguageSwitcher } from "@/components/language-switcher";
 
 export function Header() {
   const [open, setOpen] = useState(false);
-  const t = useTranslations();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white shadow-sm">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <Image
-            src="/logo.png"
+            src="/foxy-head.png"
             alt="Fix it with Foxy Logo"
-            width={36}
-            height={36}
-            className="h-9 w-9 object-contain"
+            width={40}
+            height={40}
+            className="h-10 w-10 object-contain"
             unoptimized
           />
-          <span className="text-xl font-bold tracking-tight">Fix it with Foxy</span>
+          <span className="text-xl font-bold">
+            <span className="text-blue-900">Fix it with </span>
+            <span className="text-orange-500">Foxy</span>
+          </span>
         </Link>
 
+        {/* Desktop nav */}
         <nav className="hidden items-center gap-6 md:flex">
-          <Link
-            href="/so-funktionierts"
-            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-          >
-            {t.nav.howItWorks}
+          <Link href="/" className="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-blue-900 transition-colors">
+            <Home className="h-4 w-4" /> Home
           </Link>
-          <Link
-            href="/kategorien"
-            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-          >
-            {t.nav.categories}
-          </Link>
-          <Link
-            href="/preise"
-            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-          >
-            {t.nav.forCraftsmen}
+          <Link href="/anmelden" className="text-sm font-medium text-gray-600 hover:text-blue-900 transition-colors">
+            Anmelden
           </Link>
         </nav>
 
-        <div className="hidden items-center gap-2 md:flex">
-          <LanguageSwitcher />
-          <Button variant="ghost" className="py-1.5 px-3" asChild>
-            <Link href="/anmelden">{t.nav.login}</Link>
-          </Button>
-          <Button className="py-1.5 px-3" asChild>
-            <Link href="/registrieren">{t.nav.register}</Link>
-          </Button>
+        {/* Desktop buttons */}
+        <div className="hidden items-center gap-3 md:flex">
+          <Link
+            href="/anmelden"
+            className="rounded-full border-2 border-blue-900 px-5 py-1.5 text-sm font-semibold text-blue-900 hover:bg-blue-50 transition-colors"
+          >
+            Anmelden
+          </Link>
+          <Link
+            href="/registrieren"
+            className="rounded-full bg-orange-500 px-5 py-1.5 text-sm font-semibold text-white hover:bg-orange-600 transition-colors"
+          >
+            Registrieren
+          </Link>
         </div>
 
+        {/* Mobile menu */}
         <div className="flex items-center gap-2 md:hidden">
-          <LanguageSwitcher />
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <button className="rounded-md p-2 text-gray-600 hover:bg-gray-100">
                 <Menu className="h-5 w-5" />
-              </Button>
+              </button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px]">
-              <nav className="flex flex-col gap-4 pt-8 items-end pr-4">
-                <Link
-                  href="/so-funktionierts"
-                  className="text-lg font-medium text-right"
-                  onClick={() => setOpen(false)}
-                >
-                  {t.nav.howItWorks}
+            <SheetContent side="right" className="w-[280px]">
+              <nav className="flex flex-col gap-5 pt-8">
+                <Link href="/" className="flex items-center gap-2 font-medium text-blue-900" onClick={() => setOpen(false)}>
+                  <Home className="h-4 w-4" /> Home
                 </Link>
-                <Link
-                  href="/kategorien"
-                  className="text-lg font-medium text-right"
-                  onClick={() => setOpen(false)}
-                >
-                  {t.nav.categories}
-                </Link>
-                <Link
-                  href="/preise"
-                  className="text-lg font-medium text-right"
-                  onClick={() => setOpen(false)}
-                >
-                  {t.nav.forCraftsmen}
-                </Link>
-                <div className="flex flex-col gap-4 w-full items-end">
-                  <Button variant="outline" asChild>
-                    <Link href="/anmelden" onClick={() => setOpen(false)}>
-                      {t.nav.login}
-                    </Link>
-                  </Button>
-                  <Button asChild>
-                    <Link href="/registrieren" onClick={() => setOpen(false)}>
-                      {t.nav.register}
-                    </Link>
-                  </Button>
+                <div className="mt-4 flex flex-col gap-3">
+                  <Link
+                    href="/anmelden"
+                    className="rounded-full border-2 border-blue-900 px-5 py-2 text-center text-sm font-semibold text-blue-900"
+                    onClick={() => setOpen(false)}
+                  >
+                    Anmelden
+                  </Link>
+                  <Link
+                    href="/registrieren"
+                    className="rounded-full bg-orange-500 px-5 py-2 text-center text-sm font-semibold text-white"
+                    onClick={() => setOpen(false)}
+                  >
+                    Registrieren
+                  </Link>
                 </div>
               </nav>
             </SheetContent>

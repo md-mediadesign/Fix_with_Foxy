@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Wrench } from "lucide-react";
+import Image from "next/image";
 
 export default function AuthLayout({
   children,
@@ -7,21 +7,26 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-muted/30 px-4 py-12">
-      <Link
-        href="/"
-        className="mb-8 flex items-center gap-2 text-2xl font-bold"
-      >
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-          <Wrench className="h-5 w-5" />
-        </div>
-        <span>Werkspot</span>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 py-12">
+      <Link href="/" className="mb-8 flex items-center gap-2">
+        <Image
+          src="/foxy-head.png"
+          alt="Foxy Logo"
+          width={44}
+          height={44}
+          className="h-11 w-11 object-contain"
+          unoptimized
+        />
+        <span className="text-2xl font-bold">
+          <span className="text-blue-900">Fix it with </span>
+          <span className="text-orange-500">Foxy</span>
+        </span>
       </Link>
 
       <div className="w-full max-w-lg">{children}</div>
 
-      <p className="mt-8 text-center text-sm text-muted-foreground">
-        &copy; {new Date().getFullYear()} Werkspot. Alle Rechte vorbehalten.
+      <p className="mt-8 text-center text-sm text-gray-400">
+        &copy; {new Date().getFullYear()} Fix it with Foxy. Alle Rechte vorbehalten.
       </p>
     </div>
   );
