@@ -22,12 +22,20 @@ export default async function ProtokollPage() {
     CREATE_CATEGORY: t.admin.actionCreateCategory,
     ACTIVATE_CATEGORY: t.admin.actionActivateCategory,
     DEACTIVATE_CATEGORY: t.admin.actionDeactivateCategory,
+    VERIFY_PROVIDER: t.admin.actionVerifyProvider,
+    UNVERIFY_PROVIDER: t.admin.actionUnverifyProvider,
+    EDIT_REVIEW: t.admin.actionEditReview,
+    RESET_MONTHLY_AWARDS: t.admin.actionResetMonthlyAwards,
+    CANCEL_JOB: t.admin.actionCancelJob,
   };
 
   const targetTypeLabel: Record<string, string> = {
     User: t.admin.targetUser,
     Review: t.admin.targetReview,
     Category: t.admin.targetCategory,
+    ProviderProfile: t.admin.targetProviderProfile,
+    Subscription: t.admin.targetSubscription,
+    Job: t.admin.targetJob,
   };
 
   const actions = await db.adminAction.findMany({

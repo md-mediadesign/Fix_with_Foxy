@@ -97,6 +97,118 @@ export async function createCategory(name: string, slug: string, icon: string) {
   revalidatePath("/admin/kategorien");
 }
 
+export async function verifyProvider(providerProfileId: string, userId: string) {
+  const admin = await requireAdmin();
+
+  await db.providerProfile.update({
+    where: { id: providerProfileId },
+    data: { isVerified: true },
+  });
+
+  await db.adminAction.create({
+    data: {
+      adminId: admin.id,
+      action: "VERIFY_PROVIDER",
+      targetType: "ProviderProfile",
+      targetId: providerProfileId,
+    },
+  });
+
+  revalidatePath("/admin/benutzer");
+  revalidatePath(`/admin/benutzer/${userId}`);
+}
+
+export async function unverifyProvider(providerProfileId: string, userId: string) {
+  const admin = await requireAdmin();
+
+  await db.providerProfile.update({
+    where: { id: providerProfileId },
+    data: { isVerified: false },
+  });
+
+  await db.adminAction.create({
+    data: {
+      adminId: admin.id,
+      action: "UNVERIFY_PROVIDER",
+      targetType: "ProviderProfile",
+      targetId: providerProfileId,
+    },
+  });
+
+  revalidatePath("/admin/benutzer");
+  revalidatePath(`/admin/benutzer/${userId}`);
+}
+
+export async function editReview(
+  reviewId: string,
+  data: { rating?: number; title?: string; comment?: string }
+) {
+  const admin = await requireAdmin();
+
+  await db.review.update({
+    where: { id: reviewId },
+    data: {
+      ...(data.rating !== undefined && { rating: data.rating }),
+      ...(data.title !== undefined && { title: data.title }),
+      ...(data.comment !== undefined && { comment: data.comment }),
+    },
+  });
+
+  await db.adminAction.create({
+    data: {
+      adminId: admin.id,
+      action: "EDIT_REVIEW",
+      targetType: "Review",
+      targetId: reviewId,
+      metadata: data,
+    },
+  });
+
+  revalidatePath("/admin/bewertungen");
+}
+
+export async function resetMonthlyAwards(providerProfileId: string, userId: string) {
+  const admin = await requireAdmin();
+
+  await db.subscription.update({
+    where: { providerId: providerProfileId },
+    data: { monthlyAwardsUsed: 0 },
+  });
+
+  await db.adminAction.create({
+    data: {
+      adminId: admin.id,
+      action: "RESET_MONTHLY_AWARDS",
+      targetType: "Subscription",
+      targetId: providerProfileId,
+    },
+  });
+
+  revalidatePath("/admin/abonnements");
+  revalidatePath(`/admin/benutzer/${userId}`);
+}
+
+export async function cancelJobAdmin(jobId: string, reason: string) {
+  const admin = await requireAdmin();
+
+  await db.job.update({
+    where: { id: jobId },
+    data: { status: "CANCELLED" },
+  });
+
+  await db.adminAction.create({
+    data: {
+      adminId: admin.id,
+      action: "CANCEL_JOB",
+      targetType: "Job",
+      targetId: jobId,
+      reason,
+    },
+  });
+
+  revalidatePath("/admin/auftraege");
+}
+
 export async function toggleCategory(categoryId: string) {
   const admin = await requireAdmin();
 

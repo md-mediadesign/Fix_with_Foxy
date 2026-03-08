@@ -25,6 +25,7 @@ export default async function AdminLayout({
     { href: "/admin", label: t.admin.overview, icon: "LayoutDashboard" },
     { href: "/admin/benutzer", label: t.admin.users, icon: "Users" },
     { href: "/admin/auftraege", label: t.admin.jobs, icon: "Briefcase" },
+    { href: "/admin/abonnements", label: t.admin.subscriptions, icon: "CreditCard" },
     { href: "/admin/kategorien", label: t.admin.categories, icon: "Tags" },
     { href: "/admin/bewertungen", label: t.admin.reviews, icon: "Star" },
     { href: "/admin/protokoll", label: t.admin.auditLog, icon: "ScrollText" },
