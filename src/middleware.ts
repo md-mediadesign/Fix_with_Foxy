@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
+import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 
 const publicPaths = [
   "/",
@@ -20,7 +20,7 @@ function isPublicPath(pathname: string) {
   );
 }
 
-export default async function middleware(req: NextRequest) {
+export default auth((req) => {
   const { pathname } = req.nextUrl;
 
   // Allow API routes, static files, and public paths
@@ -33,17 +33,17 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+  const session = req.auth;
 
   // Redirect unauthenticated users to login
-  if (!token) {
+  if (!session) {
     const loginUrl = new URL("/anmelden", req.url);
     loginUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
   // Role-based route protection
-  const role = token.role as string;
+  const role = session.user?.role as string;
 
   if (pathname.startsWith("/dashboard") && role !== "CLIENT" && role !== "ADMIN") {
     return NextResponse.redirect(new URL("/anbieter/dashboard", req.url));
@@ -58,7 +58,7 @@ export default async function middleware(req: NextRequest) {
   }
 
   return NextResponse.next();
-}
+});
 
 export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
