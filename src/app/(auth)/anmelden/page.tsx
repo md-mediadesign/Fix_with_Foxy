@@ -8,11 +8,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 import { loginAction } from "@/actions/auth";
-import { Hammer } from "lucide-react";
+import { Hammer, Eye, EyeOff } from "lucide-react";
 
 export default function AnmeldenPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -70,14 +71,24 @@ export default function AnmeldenPage() {
 
         <div>
           <label className="mb-1.5 block text-sm font-medium text-gray-700">Passwort</label>
-          <input
-            type="password"
-            placeholder="••••••••"
-            autoComplete="current-password"
-            disabled={isLoading}
-            className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:opacity-50"
-            {...register("password")}
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="••••••••"
+              autoComplete="current-password"
+              disabled={isLoading}
+              className="w-full rounded-xl border border-gray-200 px-4 py-3 pr-11 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:opacity-50"
+              {...register("password")}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              tabIndex={-1}
+            >
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
           {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>}
         </div>
 

@@ -35,10 +35,10 @@ async function main() {
   console.log(`Created ${CATEGORIES.length} categories`);
 
   // Create admin user
-  const adminPassword = await bcrypt.hash("admin1234", 12);
+  const adminPassword = await bcrypt.hash("Foxy@Admin25!", 12);
   const admin = await prisma.user.upsert({
     where: { email: "admin@werkspot.de" },
-    update: { passwordHash: await bcrypt.hash("admin1234", 12) },
+    update: { passwordHash: await bcrypt.hash("Foxy@Admin25!", 12) },
     create: {
       email: "admin@werkspot.de",
       name: "Admin",
@@ -47,7 +47,7 @@ async function main() {
       isActive: true,
     },
   });
-  console.log(`Admin user: ${admin.email} / admin1234`);
+  console.log(`Admin user: ${admin.email} / Foxy@Admin25!`);
 
   // Create test client
   const clientPassword = await bcrypt.hash("test1234", 12);
