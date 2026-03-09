@@ -107,21 +107,27 @@ export async function registerProvider(data: RegisterProviderInput) {
 }
 
 export async function loginAction(email: string, password: string) {
-  try {
-    // Look up user first to determine role for redirect
-    const user = await db.user.findUnique({
-      where: { email },
-      select: { role: true },
-    });
+  const user = await db.user.findUnique({
+    where: { email },
+    select: { role: true, passwordHash: true, isActive: true },
+  });
 
-    await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
-
-    return { success: true, role: user?.role ?? "CLIENT" };
-  } catch {
+  if (!user || !user.passwordHash || !user.isActive) {
     return { error: "Ungültige E-Mail oder Passwort." };
   }
+
+  const bcrypt = await import("bcryptjs");
+  const isValid = await bcrypt.compare(password, user.passwordHash);
+  if (!isValid) {
+    return { error: "Ungültige E-Mail oder Passwort." };
+  }
+
+  const redirectTo =
+    user.role === "ADMIN"
+      ? "/admin"
+      : user.role === "PROVIDER"
+        ? "/anbieter/dashboard"
+        : "/dashboard";
+
+  await signIn("credentials", { email, password, redirectTo });
 }

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -11,7 +10,6 @@ import { loginAction } from "@/actions/auth";
 import { Hammer, Eye, EyeOff } from "lucide-react";
 
 export default function AnmeldenPage() {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -27,17 +25,10 @@ export default function AnmeldenPage() {
     setIsLoading(true);
     try {
       const result = await loginAction(data.email, data.password);
-      if (result.error) {
+      if (result?.error) {
         toast.error(result.error);
         setIsLoading(false);
-        return;
       }
-      toast.success("Erfolgreich angemeldet!");
-      router.refresh();
-      const role = result.role;
-      if (role === "ADMIN") router.push("/admin");
-      else if (role === "PROVIDER") router.push("/anbieter/dashboard");
-      else router.push("/dashboard");
     } catch {
       toast.error("Ein unerwarteter Fehler ist aufgetreten.");
       setIsLoading(false);
