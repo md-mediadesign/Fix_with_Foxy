@@ -28,6 +28,8 @@ export default function AnmeldenPage() {
       if (result?.error) {
         toast.error(result.error);
         setIsLoading(false);
+      } else if (result?.redirectTo) {
+        window.location.href = result.redirectTo;
       }
     } catch {
       toast.error("Ein unerwarteter Fehler ist aufgetreten.");

@@ -122,6 +122,8 @@ export async function loginAction(email: string, password: string) {
     return { error: "Ungültige E-Mail oder Passwort." };
   }
 
+  await signIn("credentials", { email, password, redirect: false });
+
   const redirectTo =
     user.role === "ADMIN"
       ? "/admin"
@@ -129,5 +131,5 @@ export async function loginAction(email: string, password: string) {
         ? "/anbieter/dashboard"
         : "/dashboard";
 
-  await signIn("credentials", { email, password, redirectTo });
+  return { redirectTo };
 }
