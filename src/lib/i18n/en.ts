@@ -528,7 +528,6 @@ export const en = {
     createUserSubtitle: "Create a new user account",
     createUserBtn: "Create user",
     userCreatedSuccess: "User created successfully.",
-    allRoles: "All roles",
   },
   publicProfile: {
     verified: "Verified",

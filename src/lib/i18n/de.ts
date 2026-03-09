@@ -542,7 +542,6 @@ export const de = {
     createUserSubtitle: "Neues Benutzerkonto erstellen",
     createUserBtn: "Benutzer erstellen",
     userCreatedSuccess: "Benutzer wurde erfolgreich erstellt.",
-    allRoles: "Alle Rollen",
   },
   // Public provider profile
   publicProfile: {

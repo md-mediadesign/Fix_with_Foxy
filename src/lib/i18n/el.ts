@@ -528,7 +528,6 @@ export const el = {
     createUserSubtitle: "Δημιουργία νέου λογαριασμού χρήστη",
     createUserBtn: "Δημιουργία χρήστη",
     userCreatedSuccess: "Ο χρήστης δημιουργήθηκε επιτυχώς.",
-    allRoles: "Όλοι οι ρόλοι",
   },
   publicProfile: {
     verified: "Επαληθευμένος",
