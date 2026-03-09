@@ -534,6 +534,15 @@ export const de = {
     targetProviderProfile: "Anbieterprofil",
     targetSubscription: "Abonnement",
     targetJob: "Auftrag",
+    // Role change & user creation
+    changeRole: "Rolle ändern",
+    saveRole: "Rolle speichern",
+    createUser: "Neuer Benutzer",
+    createUserTitle: "Benutzer anlegen",
+    createUserSubtitle: "Neues Benutzerkonto erstellen",
+    createUserBtn: "Benutzer erstellen",
+    userCreatedSuccess: "Benutzer wurde erfolgreich erstellt.",
+    allRoles: "Alle Rollen",
   },
   // Public provider profile
   publicProfile: {

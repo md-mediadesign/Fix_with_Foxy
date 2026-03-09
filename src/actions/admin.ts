@@ -3,6 +3,8 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import bcrypt from "bcryptjs";
+import type { UserRole } from "@prisma/client";
 
 async function requireAdmin() {
   const session = await auth();
@@ -207,6 +209,92 @@ export async function cancelJobAdmin(jobId: string, reason: string) {
   });
 
   revalidatePath("/admin/auftraege");
+}
+
+export async function changeUserRole(userId: string, newRole: UserRole) {
+  const admin = await requireAdmin();
+
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    include: { clientProfile: true, providerProfile: true },
+  });
+
+  if (!user) throw new Error("Benutzer nicht gefunden");
+  if (user.id === admin.id) throw new Error("Eigene Rolle kann nicht geändert werden");
+
+  await db.user.update({
+    where: { id: userId },
+    data: { role: newRole },
+  });
+
+  // Create clientProfile if switching to CLIENT and none exists
+  if (newRole === "CLIENT" && !user.clientProfile) {
+    await db.clientProfile.create({ data: { userId } });
+  }
+
+  await db.adminAction.create({
+    data: {
+      adminId: admin.id,
+      action: "CHANGE_ROLE",
+      targetType: "User",
+      targetId: userId,
+      metadata: { from: user.role, to: newRole },
+    },
+  });
+
+  revalidatePath("/admin/benutzer");
+  revalidatePath(`/admin/benutzer/${userId}`);
+}
+
+export async function createUser(data: {
+  name: string;
+  email: string;
+  password: string;
+  role: UserRole;
+  phone?: string;
+  city?: string;
+  zipCode?: string;
+}) {
+  const admin = await requireAdmin();
+
+  const existing = await db.user.findUnique({ where: { email: data.email } });
+  if (existing) return { error: "Ein Konto mit dieser E-Mail existiert bereits." };
+
+  const passwordHash = await bcrypt.hash(data.password, 12);
+
+  await db.user.create({
+    data: {
+      name: data.name,
+      email: data.email,
+      passwordHash,
+      role: data.role,
+      ...(data.role === "CLIENT" && {
+        clientProfile: { create: { city: data.city || null } },
+      }),
+      ...(data.role === "PROVIDER" && {
+        providerProfile: {
+          create: {
+            phone: data.phone || "",
+            city: data.city || "",
+            zipCode: data.zipCode || "",
+          },
+        },
+      }),
+    },
+  });
+
+  await db.adminAction.create({
+    data: {
+      adminId: admin.id,
+      action: "CREATE_USER",
+      targetType: "User",
+      targetId: data.email,
+      metadata: { role: data.role },
+    },
+  });
+
+  revalidatePath("/admin/benutzer");
+  return { success: true };
 }
 
 export async function toggleCategory(categoryId: string) {

@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { getServerTranslations } from "@/lib/i18n/server";
+import { RoleSelect } from "./role-select";
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -150,14 +151,8 @@ export default async function BenutzerDetailPage({
                 <p className="text-muted-foreground text-sm">{user.phone}</p>
               )}
             </div>
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="secondary" className={roleBadgeColor[user.role]}>
-                {user.role === "CLIENT"
-                  ? t.admin.roleClient
-                  : user.role === "PROVIDER"
-                  ? t.admin.roleProvider
-                  : t.admin.roleAdmin}
-              </Badge>
+            <div className="flex flex-wrap items-center gap-2">
+              <RoleSelect userId={user.id} currentRole={user.role} />
               <Badge
                 variant="secondary"
                 className={

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { suspendUser, activateUser, verifyProvider, unverifyProvider } from "@/actions/admin";
-import { Search, ExternalLink, ShieldCheck, ShieldOff } from "lucide-react";
+import { Search, ExternalLink, ShieldCheck, ShieldOff, UserPlus } from "lucide-react";
 import { getServerTranslations } from "@/lib/i18n/server";
 import Link from "next/link";
 
@@ -75,11 +75,17 @@ export default async function BenutzerPage({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">{t.admin.users}</h2>
-        <p className="text-muted-foreground">
-          {t.admin.usersSubtitle}
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">{t.admin.users}</h2>
+          <p className="text-muted-foreground">{t.admin.usersSubtitle}</p>
+        </div>
+        <Link href="/admin/benutzer/neu">
+          <Button>
+            <UserPlus className="h-4 w-4 mr-2" />
+            {t.admin.createUser}
+          </Button>
+        </Link>
       </div>
 
       <Card>
