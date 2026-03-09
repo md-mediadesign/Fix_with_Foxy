@@ -3,6 +3,7 @@
 import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";
 import { signIn } from "@/lib/auth";
+import { AuthError } from "next-auth";
 import {
   registerClientSchema,
   registerProviderSchema,
@@ -122,8 +123,6 @@ export async function loginAction(email: string, password: string) {
     return { error: "Ungültige E-Mail oder Passwort." };
   }
 
-  await signIn("credentials", { email, password, redirect: false });
-
   const redirectTo =
     user.role === "ADMIN"
       ? "/admin"
@@ -131,5 +130,12 @@ export async function loginAction(email: string, password: string) {
         ? "/anbieter/dashboard"
         : "/dashboard";
 
-  return { redirectTo };
+  try {
+    await signIn("credentials", { email, password, redirectTo });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return { error: "Anmeldung fehlgeschlagen." };
+    }
+    throw error; // Re-throw NEXT_REDIRECT so Next.js handles navigation
+  }
 }
