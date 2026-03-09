@@ -211,6 +211,33 @@ export async function cancelJobAdmin(jobId: string, reason: string) {
   revalidatePath("/admin/auftraege");
 }
 
+export async function resetUserPassword(userId: string, newPassword: string) {
+  const admin = await requireAdmin();
+
+  if (newPassword.length < 8) {
+    return { error: "Passwort muss mindestens 8 Zeichen lang sein." };
+  }
+
+  const passwordHash = await bcrypt.hash(newPassword, 12);
+
+  await db.user.update({
+    where: { id: userId },
+    data: { passwordHash, mustChangePassword: true },
+  });
+
+  await db.adminAction.create({
+    data: {
+      adminId: admin.id,
+      action: "RESET_PASSWORD",
+      targetType: "User",
+      targetId: userId,
+    },
+  });
+
+  revalidatePath(`/admin/benutzer/${userId}`);
+  return { success: true };
+}
+
 export async function changeUserRole(userId: string, newRole: UserRole) {
   const admin = await requireAdmin();
 

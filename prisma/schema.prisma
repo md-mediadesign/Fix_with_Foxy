@@ -75,9 +75,10 @@ model User {
   name          String
   phone         String?
   avatarUrl     String?
-  role          UserRole  @default(CLIENT)
-  isActive      Boolean   @default(true)
-  deletedAt     DateTime?
+  role                UserRole  @default(CLIENT)
+  isActive            Boolean   @default(true)
+  mustChangePassword  Boolean   @default(false)
+  deletedAt           DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

@@ -7,10 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { updateProviderProfile } from "@/actions/profile";
+import { updateProviderProfile, changePassword } from "@/actions/profile";
 import { getCategories } from "@/actions/categories";
 import { toast } from "sonner";
-import { Save } from "lucide-react";
+import { Save, Eye, EyeOff } from "lucide-react";
 import { useTranslations } from "@/components/locale-provider";
 
 type Category = { id: string; name: string; slug: string };
@@ -18,6 +18,9 @@ type Category = { id: string; name: string; slug: string };
 export default function ProviderProfilePage() {
   const t = useTranslations();
   const [loading, setLoading] = useState(false);
+  const [pwLoading, setPwLoading] = useState(false);
+  const [showPasswords, setShowPasswords] = useState(false);
+  const [pwForm, setPwForm] = useState({ currentPassword: "", newPassword: "", confirm: "" });
   const [categories, setCategories] = useState<Category[]>([]);
   const [form, setForm] = useState({
     companyName: "",
@@ -200,6 +203,60 @@ export default function ProviderProfilePage() {
         <Button type="submit" disabled={loading} className="w-full sm:w-auto">
           <Save className="mr-2 h-4 w-4" />
           {loading ? t.provider.saving : t.provider.saveProfile}
+        </Button>
+      </form>
+
+      {/* Password change */}
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          if (pwForm.newPassword !== pwForm.confirm) { toast.error("Passwörter stimmen nicht überein."); return; }
+          setPwLoading(true);
+          try {
+            const result = await changePassword({ currentPassword: pwForm.currentPassword, newPassword: pwForm.newPassword });
+            if (result?.error) { toast.error(result.error); }
+            else { toast.success("Passwort erfolgreich geändert."); setPwForm({ currentPassword: "", newPassword: "", confirm: "" }); }
+          } catch { toast.error("Passwort konnte nicht geändert werden."); }
+          finally { setPwLoading(false); }
+        }}
+        className="space-y-4"
+      >
+        <Card>
+          <CardHeader>
+            <CardTitle>{t.dashboard.profile} – Passwort ändern</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <label className="mb-1 block text-sm font-medium">Aktuelles Passwort</label>
+              <div className="relative">
+                <input
+                  type={showPasswords ? "text" : "password"}
+                  value={pwForm.currentPassword}
+                  onChange={(e) => setPwForm({ ...pwForm, currentPassword: e.target.value })}
+                  placeholder="Ihr aktuelles Passwort"
+                  required
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 pr-10 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                />
+                <button type="button" onClick={() => setShowPasswords((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" tabIndex={-1}>
+                  {showPasswords ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="mb-1 block text-sm font-medium">Neues Passwort</label>
+                <input type={showPasswords ? "text" : "password"} value={pwForm.newPassword} onChange={(e) => setPwForm({ ...pwForm, newPassword: e.target.value })} placeholder="Mindestens 8 Zeichen" required className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium">Bestätigen</label>
+                <input type={showPasswords ? "text" : "password"} value={pwForm.confirm} onChange={(e) => setPwForm({ ...pwForm, confirm: e.target.value })} placeholder="Passwort wiederholen" required className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Button type="submit" disabled={pwLoading || pwForm.newPassword.length < 8} variant="outline">
+          <Save className="mr-2 h-4 w-4" />
+          {pwLoading ? "Wird gespeichert…" : "Passwort ändern"}
         </Button>
       </form>
     </div>

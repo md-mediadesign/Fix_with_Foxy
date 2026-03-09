@@ -3,6 +3,7 @@
 import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
+import bcrypt from "bcryptjs";
 
 export async function updateProviderProfile(data: {
   companyName?: string;
@@ -85,6 +86,42 @@ export async function updateClientProfile(data: {
   }
 
   revalidatePath("/dashboard/profil");
+  return { success: true };
+}
+
+export async function changePassword(data: {
+  currentPassword?: string;
+  newPassword: string;
+  skipCurrentCheck?: boolean; // true when forced change (mustChangePassword)
+}) {
+  const session = await auth();
+  if (!session?.user) return { error: "Nicht autorisiert." };
+
+  if (data.newPassword.length < 8) {
+    return { error: "Passwort muss mindestens 8 Zeichen lang sein." };
+  }
+
+  const user = await db.user.findUnique({
+    where: { id: session.user.id },
+    select: { passwordHash: true, mustChangePassword: true },
+  });
+
+  if (!user) return { error: "Benutzer nicht gefunden." };
+
+  // If not a forced reset, verify current password
+  if (!data.skipCurrentCheck && !user.mustChangePassword) {
+    if (!data.currentPassword) return { error: "Aktuelles Passwort erforderlich." };
+    const isValid = await bcrypt.compare(data.currentPassword, user.passwordHash ?? "");
+    if (!isValid) return { error: "Aktuelles Passwort ist falsch." };
+  }
+
+  const passwordHash = await bcrypt.hash(data.newPassword, 12);
+
+  await db.user.update({
+    where: { id: session.user.id },
+    data: { passwordHash, mustChangePassword: false },
+  });
+
   return { success: true };
 }
 

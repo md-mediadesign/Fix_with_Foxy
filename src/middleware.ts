@@ -42,6 +42,11 @@ export default auth((req) => {
     return NextResponse.redirect(loginUrl);
   }
 
+  // Force password change
+  if (session.user?.mustChangePassword && pathname !== "/passwort-aendern") {
+    return NextResponse.redirect(new URL("/passwort-aendern", req.url));
+  }
+
   // Role-based route protection
   const role = session.user?.role as string;
 

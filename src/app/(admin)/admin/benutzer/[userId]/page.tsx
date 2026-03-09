@@ -24,6 +24,7 @@ import {
 import Link from "next/link";
 import { getServerTranslations } from "@/lib/i18n/server";
 import { RoleSelect } from "./role-select";
+import { PasswordResetForm } from "./password-reset-form";
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -170,6 +171,9 @@ export default async function BenutzerDetailPage({
           </p>
         </CardHeader>
       </Card>
+
+      {/* Password reset */}
+      <PasswordResetForm userId={user.id} />
 
       {/* Provider section */}
       {user.providerProfile && (

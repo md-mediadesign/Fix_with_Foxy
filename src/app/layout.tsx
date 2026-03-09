@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { LocaleProvider } from "@/components/locale-provider";
+import { AuthSessionProvider } from "@/components/session-provider";
 import { getLocale } from "@/lib/i18n/server";
 import "./globals.css";
 
@@ -36,10 +37,12 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
-        <LocaleProvider initialLocale={locale}>
-          {children}
-          <Toaster />
-        </LocaleProvider>
+        <AuthSessionProvider>
+          <LocaleProvider initialLocale={locale}>
+            {children}
+            <Toaster />
+          </LocaleProvider>
+        </AuthSessionProvider>
       </body>
     </html>
   );
