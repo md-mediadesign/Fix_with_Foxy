@@ -155,10 +155,10 @@ model ProviderProfile {
   userId        String   @unique
   companyName   String?
   description   String?  @db.Text
-  phone         String
+  phone         String?
   whatsappPhone String?
   city          String
-  zipCode       String
+  zipCode       String?
   serviceRadius Int      @default(25)
   isVerified    Boolean  @default(false)
   averageRating Float    @default(0)

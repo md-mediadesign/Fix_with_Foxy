@@ -40,12 +40,6 @@ export async function registerClient(data: RegisterClientInput) {
     },
   });
 
-  await signIn("credentials", {
-    email: validated.email,
-    password: validated.password,
-    redirect: false,
-  });
-
   return { success: true };
 }
 
@@ -73,9 +67,9 @@ export async function registerProvider(data: RegisterProviderInput) {
       providerProfile: {
         create: {
           companyName: validated.companyName || null,
-          phone: validated.phone,
+          phone: validated.phone ?? null,
           city: validated.city,
-          zipCode: validated.zipCode,
+          zipCode: validated.zipCode ?? null,
           description: validated.description || null,
           serviceRadius: validated.serviceRadius,
           categories: {
@@ -96,12 +90,6 @@ export async function registerProvider(data: RegisterProviderInput) {
         },
       },
     },
-  });
-
-  await signIn("credentials", {
-    email: validated.email,
-    password: validated.password,
-    redirect: false,
   });
 
   return { success: true };

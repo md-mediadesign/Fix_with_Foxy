@@ -13,6 +13,7 @@ import {
   type RegisterClientInput,
   type RegisterProviderInput,
 } from "@/lib/validations/auth";
+import { signIn } from "next-auth/react";
 import { registerClient, registerProvider } from "@/actions/auth";
 import { getCategories } from "@/actions/categories";
 
@@ -78,8 +79,7 @@ export default function RegistrierenPage() {
     try {
       const result = await registerClient(data);
       if (result.error) { toast.error(result.error); setIsLoading(false); return; }
-      toast.success("Konto erfolgreich erstellt!");
-      router.push("/dashboard");
+      await signIn("credentials", { email: data.email, password: data.password, callbackUrl: "/dashboard" });
     } catch {
       toast.error("Ein Fehler ist aufgetreten.");
       setIsLoading(false);
@@ -92,8 +92,7 @@ export default function RegistrierenPage() {
     try {
       const result = await registerProvider({ ...data, categoryIds: selectedCategories });
       if (result.error) { toast.error(result.error); setIsLoading(false); return; }
-      toast.success("Konto erfolgreich erstellt!");
-      router.push("/anbieter/dashboard");
+      await signIn("credentials", { email: data.email, password: data.password, callbackUrl: "/anbieter/dashboard" });
     } catch {
       toast.error("Ein Fehler ist aufgetreten.");
       setIsLoading(false);

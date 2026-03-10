@@ -21,9 +21,9 @@ export const registerProviderSchema = z.object({
     .string()
     .min(8, "Passwort muss mindestens 8 Zeichen haben"),
   companyName: z.string().optional(),
-  phone: z.string().min(5, "Telefonnummer ist erforderlich"),
+  phone: z.string().optional(),
   city: z.string().min(2, "Stadt ist erforderlich"),
-  zipCode: z.string().min(4, "PLZ ist erforderlich"),
+  zipCode: z.string().optional(),
   description: z.string().optional(),
   serviceRadius: z.number().min(1).max(200),
   categoryIds: z.array(z.string()).min(1, "Wähle mindestens eine Kategorie"),
