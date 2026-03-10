@@ -70,9 +70,10 @@ export async function createReview(data: CreateReviewInput) {
     },
   });
 
-  // Notify provider
+  // Notify provider via DB, E-Mail and WhatsApp
   const provider = await db.providerProfile.findUnique({
     where: { id: job.awardedBid.providerId },
+    include: { user: true },
   });
 
   if (provider) {
@@ -85,6 +86,27 @@ export async function createReview(data: CreateReviewInput) {
         link: `/anbieter/bewertungen`,
       },
     });
+
+    try {
+      const { sendReviewReceivedEmail } = await import("@/lib/email");
+      await sendReviewReceivedEmail(
+        provider.user.email,
+        provider.companyName ?? provider.user.name,
+        job.title,
+        validated.rating,
+        validated.comment
+      );
+
+      const { sendReviewReceivedWhatsApp } = await import("@/lib/whatsapp");
+      await sendReviewReceivedWhatsApp(
+        provider.whatsappPhone ?? provider.phone,
+        provider.companyName ?? provider.user.name,
+        job.title,
+        validated.rating
+      );
+    } catch (err) {
+      console.error("[createReview] Benachrichtigung fehlgeschlagen:", err);
+    }
   }
 
   revalidatePath(`/dashboard/auftraege/${validated.jobId}`);

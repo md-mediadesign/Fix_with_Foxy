@@ -195,8 +195,43 @@ export async function awardBid(jobId: string, bidId: string) {
     }),
   ]);
 
-  // TODO: Send notification to awarded provider
-  // TODO: Send rejection notifications to other bidders
+  // Notify awarded provider via DB, E-Mail and WhatsApp
+  try {
+    const providerUser = await db.user.findUnique({
+      where: { id: bid.provider.userId },
+    });
+
+    await db.notification.create({
+      data: {
+        userId: bid.provider.userId,
+        type: "JOB_AWARDED",
+        title: "Auftrag erhalten!",
+        body: `Du hast den Zuschlag für "${job.title}" erhalten.`,
+        link: `/anbieter/dashboard`,
+      },
+    });
+
+    if (providerUser?.email) {
+      const { sendJobAwardedEmail } = await import("@/lib/email");
+      await sendJobAwardedEmail(
+        providerUser.email,
+        bid.provider.companyName ?? providerUser.name,
+        job.title,
+        job.city,
+        bid.amount
+      );
+    }
+
+    const { sendJobAwardedWhatsApp } = await import("@/lib/whatsapp");
+    await sendJobAwardedWhatsApp(
+      bid.provider.whatsappPhone ?? bid.provider.phone,
+      bid.provider.companyName ?? providerUser?.name ?? "Anbieter",
+      job.title,
+      bid.amount
+    );
+  } catch (err) {
+    console.error("[awardBid] Benachrichtigung fehlgeschlagen:", err);
+  }
 
   revalidatePath(`/dashboard/auftraege/${jobId}`);
   return { success: true };
