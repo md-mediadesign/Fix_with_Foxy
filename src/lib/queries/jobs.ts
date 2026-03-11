@@ -59,14 +59,6 @@ export async function getAvailableJobsForProvider(
     deletedAt: null,
   };
 
-  // Premium access window filter
-  if (!isPremium) {
-    where.OR = [
-      { premiumAccessUntil: null },
-      { premiumAccessUntil: { lt: new Date() } },
-    ];
-  }
-
   // Category filter
   if (filters?.categoryId && filters.categoryId !== "all") {
     where.categoryId = filters.categoryId;
@@ -80,12 +72,29 @@ export async function getAvailableJobsForProvider(
     where.city = { contains: filters.city, mode: "insensitive" };
   }
 
-  // Search filter
+  // Combine premium window + search with AND to avoid OR overwrite
+  const andConditions: Record<string, unknown>[] = [];
+
+  if (!isPremium) {
+    andConditions.push({
+      OR: [
+        { premiumAccessUntil: null },
+        { premiumAccessUntil: { lt: new Date() } },
+      ],
+    });
+  }
+
   if (filters?.search) {
-    where.OR = [
-      { title: { contains: filters.search, mode: "insensitive" } },
-      { description: { contains: filters.search, mode: "insensitive" } },
-    ];
+    andConditions.push({
+      OR: [
+        { title: { contains: filters.search, mode: "insensitive" } },
+        { description: { contains: filters.search, mode: "insensitive" } },
+      ],
+    });
+  }
+
+  if (andConditions.length > 0) {
+    where.AND = andConditions;
   }
 
   return db.job.findMany({

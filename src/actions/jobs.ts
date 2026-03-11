@@ -265,7 +265,7 @@ export async function markJobInProgress(jobId: string) {
     data: { status: "IN_PROGRESS" },
   });
 
-  revalidatePath(`/anbieter/meine-auftraege/${jobId}`);
+  revalidatePath(`/anbieter/auftraege/${jobId}`);
   return { success: true };
 }
 
@@ -306,6 +306,6 @@ export async function markJobCompleted(jobId: string) {
   }
 
   revalidatePath(`/dashboard/auftraege/${jobId}`);
-  revalidatePath(`/anbieter/meine-auftraege/${jobId}`);
+  revalidatePath(`/anbieter/auftraege/${jobId}`);
   return { success: true };
 }

@@ -4,7 +4,7 @@ export const APP_DESCRIPTION =
   "Werkspot verbindet Auftraggeber mit den besten Handwerkern und Dienstleistern in ihrer Region. Kostenlos einen Auftrag erstellen und Angebote erhalten.";
 
 export const TRIAL_DAYS = 30;
-export const PREMIUM_WINDOW_HOURS = 2;
+export const PREMIUM_WINDOW_HOURS = 0;
 export const JOB_EXPIRY_DAYS = 14;
 
 export const PLAN_LIMITS = {
