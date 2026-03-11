@@ -1,7 +1,24 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT ?? 587),
+  secure: process.env.SMTP_PORT === "465",
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
+
 const FROM = process.env.EMAIL_FROM ?? "auftrag@fixwithfoxy.com";
+
+async function sendMail(to: string, subject: string, html: string) {
+  if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
+    console.warn("[email] SMTP-Konfiguration fehlt – E-Mail übersprungen");
+    return;
+  }
+  await transporter.sendMail({ from: FROM, to, subject, html });
+}
 
 export async function sendJobAwardedEmail(
   to: string,
@@ -10,16 +27,10 @@ export async function sendJobAwardedEmail(
   jobCity: string,
   amount: number
 ) {
-  if (!process.env.RESEND_API_KEY) {
-    console.warn("[email] RESEND_API_KEY nicht gesetzt – E-Mail übersprungen");
-    return;
-  }
-
-  await resend.emails.send({
-    from: FROM,
+  await sendMail(
     to,
-    subject: `🎉 Du hast den Auftrag erhalten: ${jobTitle}`,
-    html: `
+    `🎉 Du hast den Auftrag erhalten: ${jobTitle}`,
+    `
       <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
         <h2 style="color:#f97316">Glückwunsch, ${providerName}!</h2>
         <p>Du hast den Zuschlag für folgenden Auftrag erhalten:</p>
@@ -34,8 +45,8 @@ export async function sendJobAwardedEmail(
           Zum Dashboard
         </a>
       </div>
-    `,
-  });
+    `
+  );
 }
 
 export async function sendReviewReceivedEmail(
@@ -45,18 +56,11 @@ export async function sendReviewReceivedEmail(
   rating: number,
   comment?: string | null
 ) {
-  if (!process.env.RESEND_API_KEY) {
-    console.warn("[email] RESEND_API_KEY nicht gesetzt – E-Mail übersprungen");
-    return;
-  }
-
   const stars = "★".repeat(rating) + "☆".repeat(5 - rating);
-
-  await resend.emails.send({
-    from: FROM,
+  await sendMail(
     to,
-    subject: `⭐ Neue Bewertung für dich: ${stars}`,
-    html: `
+    `⭐ Neue Bewertung für dich: ${stars}`,
+    `
       <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
         <h2 style="color:#f97316">Neue Bewertung, ${providerName}!</h2>
         <p>Du hast eine Bewertung für den Auftrag <strong>${jobTitle}</strong> erhalten:</p>
@@ -69,6 +73,6 @@ export async function sendReviewReceivedEmail(
           Bewertungen ansehen
         </a>
       </div>
-    `,
-  });
+    `
+  );
 }
