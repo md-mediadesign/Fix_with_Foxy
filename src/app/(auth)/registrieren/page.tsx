@@ -26,6 +26,9 @@ const CATEGORY_IMAGES: Record<string, string> = {
   "montage-aufbau": "/categories/montage.jpg",
   elektrik: "/categories/elektrik.png",
   "sanitaer-heizung": "/categories/sanitaer.png",
+  "dach-fassade": "/categories/dach.png",
+  schluesseldienst: "/categories/schluesseldienst.png",
+  "umzug-transport": "/categories/umzug.png",
 };
 
 const CATEGORY_DESCS: Record<string, string> = {
@@ -35,6 +38,9 @@ const CATEGORY_DESCS: Record<string, string> = {
   "montage-aufbau": "Allgemeine Reparaturen und Instandhaltung im Haus.",
   elektrik: "Elektroinstallationen, Reparaturen und Wartung.",
   "sanitaer-heizung": "Sanitärinstallationen, Rohrreinigung und Reparaturen.",
+  "dach-fassade": "Dachreparaturen, Dachrinnen und Fassadenarbeiten.",
+  schluesseldienst: "Türöffnung, Schlossaustausch und Einbruchschutz.",
+  "umzug-transport": "Umzugsservice, Möbeltransport und Entrümpelung.",
 };
 
 export default function RegistrierenPage() {

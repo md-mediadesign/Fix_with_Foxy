@@ -42,6 +42,24 @@ const FEATURED_CATEGORIES = [
     image: "/categories/sanitaer.png",
     desc: "Sanitärinstallationen, Rohrreinigung und Reparaturen.",
   },
+  {
+    name: "Dach & Fassade",
+    slug: "dach-fassade",
+    image: "/categories/dach.png",
+    desc: "Dachreparaturen, Dachrinnen und Fassadenarbeiten.",
+  },
+  {
+    name: "Schlüsseldienst",
+    slug: "schluesseldienst",
+    image: "/categories/schluesseldienst.png",
+    desc: "Türöffnung, Schlossaustausch und Einbruchschutz.",
+  },
+  {
+    name: "Umzug & Transport",
+    slug: "umzug-transport",
+    image: "/categories/umzug.png",
+    desc: "Umzugsservice, Möbeltransport und Entrümpelung.",
+  },
 ];
 
 export default function LandingPage() {
