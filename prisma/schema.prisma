@@ -264,6 +264,8 @@ model Job {
   description        String    @db.Text
   zipCode            String
   city               String
+  latitude           Float?
+  longitude          Float?
   budgetMin          Float?
   budgetMax          Float?
   desiredDate        DateTime?

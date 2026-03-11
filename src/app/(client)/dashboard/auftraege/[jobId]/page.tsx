@@ -23,6 +23,7 @@ import {
   User,
   CheckCircle,
   AlertCircle,
+  Pencil,
 } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 import { de } from "date-fns/locale";
@@ -119,6 +120,14 @@ export default async function ClientJobDetailPage({
           </div>
         </div>
         <div className="flex gap-2">
+          {["DRAFT", "OPEN"].includes(job.status) && (
+            <Button variant="outline" asChild>
+              <Link href={`/dashboard/auftraege/${job.id}/bearbeiten`}>
+                <Pencil className="mr-2 h-4 w-4" />
+                Bearbeiten
+              </Link>
+            </Button>
+          )}
           <Button variant="outline" asChild>
             <Link href={`/dashboard/auftraege/${job.id}/nachrichten`}>
               <MessageSquare className="mr-2 h-4 w-4" />

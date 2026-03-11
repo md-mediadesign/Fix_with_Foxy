@@ -31,6 +31,8 @@ export async function createJob(data: CreateJobInput) {
       description: validated.description,
       city: validated.city,
       zipCode: validated.zipCode,
+      latitude: validated.latitude ?? null,
+      longitude: validated.longitude ?? null,
       budgetMin: validated.budgetMin || null,
       budgetMax: validated.budgetMax || null,
       desiredDate: validated.desiredDate ? new Date(validated.desiredDate) : null,
@@ -79,6 +81,63 @@ export async function publishJob(jobId: string) {
   // TODO: Trigger notifications for premium providers (WhatsApp)
   // TODO: Schedule notification for non-premium providers after window
 
+  revalidatePath("/dashboard/auftraege");
+  return { success: true };
+}
+
+export async function updateJob(
+  jobId: string,
+  data: {
+    title?: string;
+    description?: string;
+    city?: string;
+    zipCode?: string;
+    latitude?: number | null;
+    longitude?: number | null;
+    budgetMin?: number | null;
+    budgetMax?: number | null;
+    desiredDate?: string | null;
+    urgency?: string | null;
+  }
+) {
+  const session = await auth();
+  if (!session || session.user.role !== "CLIENT") {
+    return { error: "Nicht autorisiert." };
+  }
+
+  const clientProfile = await db.clientProfile.findUnique({
+    where: { userId: session.user.id },
+  });
+
+  const job = await db.job.findUnique({ where: { id: jobId } });
+
+  if (!job || job.clientId !== clientProfile?.id) {
+    return { error: "Auftrag nicht gefunden." };
+  }
+
+  if (!["DRAFT", "OPEN"].includes(job.status)) {
+    return { error: "Auftrag kann nicht mehr bearbeitet werden." };
+  }
+
+  await db.job.update({
+    where: { id: jobId },
+    data: {
+      ...(data.title !== undefined && { title: data.title }),
+      ...(data.description !== undefined && { description: data.description }),
+      ...(data.city !== undefined && { city: data.city }),
+      ...(data.zipCode !== undefined && { zipCode: data.zipCode }),
+      ...(data.latitude !== undefined && { latitude: data.latitude }),
+      ...(data.longitude !== undefined && { longitude: data.longitude }),
+      ...(data.budgetMin !== undefined && { budgetMin: data.budgetMin }),
+      ...(data.budgetMax !== undefined && { budgetMax: data.budgetMax }),
+      ...(data.desiredDate !== undefined && {
+        desiredDate: data.desiredDate ? new Date(data.desiredDate) : null,
+      }),
+      ...(data.urgency !== undefined && { urgency: data.urgency }),
+    },
+  });
+
+  revalidatePath(`/dashboard/auftraege/${jobId}`);
   revalidatePath("/dashboard/auftraege");
   return { success: true };
 }

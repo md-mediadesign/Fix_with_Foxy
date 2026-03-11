@@ -11,6 +11,7 @@ import { Users, Briefcase, CreditCard, Euro, UserPlus, ClipboardList, FlaskConic
 import { PLAN_LIMITS } from "@/lib/constants";
 import type { Metadata } from "next";
 import { getServerTranslations } from "@/lib/i18n/server";
+import { WhatsAppTestSection } from "./whatsapp-test-section";
 
 export const metadata: Metadata = {
   title: "Admin-\u00dcbersicht",
@@ -237,6 +238,8 @@ export default async function AdminOverviewPage() {
           </div>
         </div>
       </Card>
+
+      <WhatsAppTestSection />
     </div>
   );
 }

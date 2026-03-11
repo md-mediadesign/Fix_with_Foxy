@@ -3,11 +3,19 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Home } from "lucide-react";
+import { Menu, Home, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const { data: session } = useSession();
+  const dashboardHref =
+    session?.user?.role === "PROVIDER"
+      ? "/anbieter/dashboard"
+      : session?.user?.role === "ADMIN"
+        ? "/admin"
+        : "/dashboard";
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white shadow-sm">
@@ -40,18 +48,30 @@ export function Header() {
 
         {/* Desktop buttons */}
         <div className="hidden items-center gap-3 md:flex">
-          <Link
-            href="/anmelden"
-            className="rounded-full border-2 border-blue-900 px-5 py-1.5 text-sm font-semibold text-blue-900 hover:bg-blue-50 transition-colors"
-          >
-            Anmelden
-          </Link>
-          <Link
-            href="/registrieren"
-            className="rounded-full bg-orange-500 px-5 py-1.5 text-sm font-semibold text-white hover:bg-orange-600 transition-colors"
-          >
-            Registrieren
-          </Link>
+          {session ? (
+            <Link
+              href={dashboardHref}
+              className="flex items-center gap-2 rounded-full bg-blue-900 px-5 py-1.5 text-sm font-semibold text-white hover:bg-blue-800 transition-colors"
+            >
+              <LayoutDashboard className="h-4 w-4" />
+              Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/anmelden"
+                className="rounded-full border-2 border-blue-900 px-5 py-1.5 text-sm font-semibold text-blue-900 hover:bg-blue-50 transition-colors"
+              >
+                Anmelden
+              </Link>
+              <Link
+                href="/registrieren"
+                className="rounded-full bg-orange-500 px-5 py-1.5 text-sm font-semibold text-white hover:bg-orange-600 transition-colors"
+              >
+                Registrieren
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile menu */}
@@ -68,20 +88,33 @@ export function Header() {
                   <Home className="h-4 w-4" /> Home
                 </Link>
                 <div className="mt-4 flex flex-col gap-3">
-                  <Link
-                    href="/anmelden"
-                    className="rounded-full border-2 border-blue-900 px-5 py-2 text-center text-sm font-semibold text-blue-900"
-                    onClick={() => setOpen(false)}
-                  >
-                    Anmelden
-                  </Link>
-                  <Link
-                    href="/registrieren"
-                    className="rounded-full bg-orange-500 px-5 py-2 text-center text-sm font-semibold text-white"
-                    onClick={() => setOpen(false)}
-                  >
-                    Registrieren
-                  </Link>
+                  {session ? (
+                    <Link
+                      href={dashboardHref}
+                      className="flex items-center justify-center gap-2 rounded-full bg-blue-900 px-5 py-2 text-center text-sm font-semibold text-white"
+                      onClick={() => setOpen(false)}
+                    >
+                      <LayoutDashboard className="h-4 w-4" />
+                      Dashboard
+                    </Link>
+                  ) : (
+                    <>
+                      <Link
+                        href="/anmelden"
+                        className="rounded-full border-2 border-blue-900 px-5 py-2 text-center text-sm font-semibold text-blue-900"
+                        onClick={() => setOpen(false)}
+                      >
+                        Anmelden
+                      </Link>
+                      <Link
+                        href="/registrieren"
+                        className="rounded-full bg-orange-500 px-5 py-2 text-center text-sm font-semibold text-white"
+                        onClick={() => setOpen(false)}
+                      >
+                        Registrieren
+                      </Link>
+                    </>
+                  )}
                 </div>
               </nav>
             </SheetContent>

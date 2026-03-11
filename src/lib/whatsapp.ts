@@ -42,6 +42,12 @@ export async function sendJobAwardedWhatsApp(
   );
 }
 
+export async function sendBulkWhatsApp(phones: string[], message: string) {
+  for (const phone of phones) {
+    await sendWhatsAppMessage(phone, message);
+  }
+}
+
 export async function sendReviewReceivedWhatsApp(
   phone: string | null,
   providerName: string,

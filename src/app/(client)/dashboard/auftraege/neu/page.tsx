@@ -5,8 +5,14 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import dynamic from "next/dynamic";
 import { createJobSchema, type CreateJobInput } from "@/lib/validations/job";
 import { createJob, publishJob } from "@/actions/jobs";
+
+const LocationPicker = dynamic(
+  () => import("@/components/map/location-picker").then((m) => m.LocationPicker),
+  { ssr: false }
+);
 import { getCategories } from "@/actions/categories";
 import {
   Card,
@@ -93,6 +99,8 @@ export default function NewJobPage() {
       description: "",
       city: "",
       zipCode: "",
+      latitude: undefined,
+      longitude: undefined,
       budgetMin: undefined,
       budgetMax: undefined,
       desiredDate: undefined,
@@ -125,12 +133,7 @@ export default function NewJobPage() {
   }
 
   async function goToStep3() {
-    const valid = await trigger([
-      "title",
-      "description",
-      "city",
-      "zipCode",
-    ]);
+    const valid = await trigger(["title", "description", "city", "zipCode"]);
     if (valid) setStep(3);
   }
 
@@ -307,32 +310,36 @@ export default function NewJobPage() {
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="city">{t.jobs.city} *</Label>
-                  <Input
-                    id="city"
-                    placeholder={t.auth.cityPlaceholder}
-                    {...register("city")}
-                  />
-                  {errors.city && (
-                    <p className="text-sm text-destructive">
-                      {errors.city.message}
-                    </p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="zipCode">{t.jobs.zipCode} *</Label>
-                  <Input
-                    id="zipCode"
-                    placeholder={t.auth.zipCodePlaceholder}
-                    {...register("zipCode")}
-                  />
-                  {errors.zipCode && (
-                    <p className="text-sm text-destructive">
-                      {errors.zipCode.message}
-                    </p>
-                  )}
+              <div className="space-y-2">
+                <Label>{t.jobs.city} / {t.jobs.zipCode} *</Label>
+                <LocationPicker
+                  onLocationChange={({ lat, lng, city, zipCode }) => {
+                    setValue("latitude", lat);
+                    setValue("longitude", lng);
+                    if (city) setValue("city", city);
+                    if (zipCode) setValue("zipCode", zipCode);
+                  }}
+                />
+                {/* Hidden fallback inputs for manual entry */}
+                <div className="grid grid-cols-2 gap-3 mt-2">
+                  <div className="space-y-1">
+                    <Input
+                      placeholder={t.auth.cityPlaceholder}
+                      {...register("city")}
+                    />
+                    {errors.city && (
+                      <p className="text-xs text-destructive">{errors.city.message}</p>
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    <Input
+                      placeholder={t.auth.zipCodePlaceholder}
+                      {...register("zipCode")}
+                    />
+                    {errors.zipCode && (
+                      <p className="text-xs text-destructive">{errors.zipCode.message}</p>
+                    )}
+                  </div>
                 </div>
               </div>
 

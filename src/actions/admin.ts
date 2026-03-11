@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
 import type { UserRole } from "@prisma/client";
+import { sendBulkWhatsApp } from "@/lib/whatsapp";
 
 async function requireAdmin() {
   const session = await auth();
@@ -322,6 +323,23 @@ export async function createUser(data: {
 
   revalidatePath("/admin/benutzer");
   return { success: true };
+}
+
+export async function sendTestWhatsAppToAdmins() {
+  await requireAdmin();
+
+  const admins = await db.user.findMany({
+    where: { role: "ADMIN", isActive: true, phone: { not: null } },
+    select: { name: true, phone: true },
+  });
+
+  const phones = admins.map((a) => a.phone!).filter(Boolean);
+  await sendBulkWhatsApp(
+    phones,
+    `✅ Test-Nachricht von Werkspot Admin\n\nDiese Nachricht bestätigt, dass WhatsApp-Benachrichtigungen korrekt funktionieren.\n🕐 ${new Date().toLocaleString("de-DE")}`
+  );
+
+  return { success: true, sent: phones.length, total: admins.length };
 }
 
 export async function toggleCategory(categoryId: string) {

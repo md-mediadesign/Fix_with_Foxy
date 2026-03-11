@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Briefcase, Clock, CheckCircle, ArrowRight } from "lucide-react";
+import { Briefcase, Clock, CheckCircle, ArrowRight, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -63,7 +63,7 @@ export default async function ClientDashboardPage() {
     DISPUTED: t.jobs.statusDisputed,
   };
 
-  const [activeJobs, pendingBids, completedJobs, recentJobs] =
+  const [activeJobs, pendingBids, completedJobs, recentJobs, publicJobExamples] =
     await Promise.all([
       db.job.count({
         where: {
@@ -99,6 +99,16 @@ export default async function ClientDashboardPage() {
         },
         orderBy: { createdAt: "desc" },
         take: 5,
+      }),
+      db.job.findMany({
+        where: {
+          status: "OPEN",
+          deletedAt: null,
+          clientId: { not: clientProfile.id },
+        },
+        include: { category: true },
+        orderBy: { createdAt: "desc" },
+        take: 4,
       }),
     ]);
 
@@ -211,6 +221,47 @@ export default async function ClientDashboardPage() {
           )}
         </CardContent>
       </Card>
+      {/* Public jobs for inspiration */}
+      {publicJobExamples.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Lightbulb className="h-5 w-5 text-amber-500" />
+              Inspiration – Aktuelle Aufträge anderer Nutzer
+            </CardTitle>
+            <CardDescription>
+              Sieh dir an, wie andere Auftraggeber ihre Projekte beschreiben.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {publicJobExamples.map((job) => (
+                <div
+                  key={job.id}
+                  className="rounded-lg border p-4 space-y-1 bg-muted/30"
+                >
+                  <p className="font-medium truncate">{job.title}</p>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <span>{job.category.name}</span>
+                    <span>&middot;</span>
+                    <span>{job.city}</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {job.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <div className="pt-4 text-center">
+              <Button variant="outline" asChild>
+                <Link href="/dashboard/auftraege/neu">
+                  Eigenen Auftrag erstellen →
+                </Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
