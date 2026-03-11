@@ -12,8 +12,6 @@ export const createJobSchema = z.object({
     .max(2000, "Beschreibung darf maximal 2000 Zeichen haben"),
   city: z.string().min(2, "Stadt ist erforderlich"),
   zipCode: z.string().min(4, "PLZ ist erforderlich"),
-  latitude: z.number().optional(),
-  longitude: z.number().optional(),
   budgetMin: z.number().min(0).optional(),
   budgetMax: z.number().min(0).optional(),
   desiredDate: z.string().optional(),

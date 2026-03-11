@@ -99,8 +99,6 @@ export default function NewJobPage() {
       description: "",
       city: "",
       zipCode: "",
-      latitude: undefined,
-      longitude: undefined,
       budgetMin: undefined,
       budgetMax: undefined,
       desiredDate: undefined,
@@ -313,9 +311,7 @@ export default function NewJobPage() {
               <div className="space-y-2">
                 <Label>{t.jobs.city} / {t.jobs.zipCode} *</Label>
                 <LocationPicker
-                  onLocationChange={({ lat, lng, city, zipCode }) => {
-                    setValue("latitude", lat);
-                    setValue("longitude", lng);
+                  onLocationChange={({ city, zipCode }) => {
                     if (city) setValue("city", city);
                     if (zipCode) setValue("zipCode", zipCode);
                   }}

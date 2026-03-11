@@ -5,20 +5,12 @@ import type { Map as LeafletMap, Marker as LeafletMarker } from "leaflet";
 
 interface LocationPickerProps {
   onLocationChange: (data: {
-    lat: number;
-    lng: number;
     city: string;
     zipCode: string;
   }) => void;
-  initialLat?: number;
-  initialLng?: number;
 }
 
-export function LocationPicker({
-  onLocationChange,
-  initialLat,
-  initialLng,
-}: LocationPickerProps) {
+export function LocationPicker({ onLocationChange }: LocationPickerProps) {
   const mapRef = useRef<LeafletMap | null>(null);
   const markerRef = useRef<LeafletMarker | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -31,7 +23,6 @@ export function LocationPicker({
       // @ts-expect-error leaflet css import
       await import("leaflet/dist/leaflet.css");
 
-      // Fix default marker icon
       const icon = L.divIcon({
         html: `<div style="width:24px;height:24px;background:#f97316;border:3px solid white;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.4)"></div>`,
         iconSize: [24, 24],
@@ -39,13 +30,9 @@ export function LocationPicker({
         className: "",
       });
 
-      const defaultCenter: [number, number] = initialLat && initialLng
-        ? [initialLat, initialLng]
-        : [51.1657, 10.4515]; // Germany center
-
       const map = L.map(containerRef.current!, {
-        center: defaultCenter,
-        zoom: initialLat ? 14 : 6,
+        center: [51.1657, 10.4515],
+        zoom: 6,
         zoomControl: true,
       });
 
@@ -54,10 +41,6 @@ export function LocationPicker({
       }).addTo(map);
 
       mapRef.current = map;
-
-      if (initialLat && initialLng) {
-        markerRef.current = L.marker([initialLat, initialLng], { icon }).addTo(map);
-      }
 
       map.on("click", async (e) => {
         const { lat, lng } = e.latlng;
@@ -79,9 +62,9 @@ export function LocationPicker({
           const city =
             addr.city ?? addr.town ?? addr.village ?? addr.municipality ?? "";
           const zipCode = addr.postcode ?? "";
-          onLocationChange({ lat, lng, city, zipCode });
+          onLocationChange({ city, zipCode });
         } catch {
-          onLocationChange({ lat, lng, city: "", zipCode: "" });
+          onLocationChange({ city: "", zipCode: "" });
         }
       });
     }

@@ -40,8 +40,6 @@ const editJobSchema = z.object({
   description: z.string().min(20).max(2000),
   city: z.string().min(2),
   zipCode: z.string().min(4),
-  latitude: z.number().optional(),
-  longitude: z.number().optional(),
   budgetMin: z.number().min(0).optional(),
   budgetMax: z.number().min(0).optional(),
   desiredDate: z.string().optional(),
@@ -59,8 +57,6 @@ export default function EditJobPage({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [jobLoaded, setJobLoaded] = useState(false);
-  const [initialLat, setInitialLat] = useState<number | undefined>();
-  const [initialLng, setInitialLng] = useState<number | undefined>();
 
   const form = useForm<EditJobInput>({
     resolver: zodResolver(editJobSchema),
@@ -78,11 +74,8 @@ export default function EditJobPage({
         setValue("zipCode", job.zipCode);
         if (job.budgetMin) setValue("budgetMin", job.budgetMin);
         if (job.budgetMax) setValue("budgetMax", job.budgetMax);
-        if (job.desiredDate)
-          setValue("desiredDate", job.desiredDate.substring(0, 10));
+        if (job.desiredDate) setValue("desiredDate", job.desiredDate.substring(0, 10));
         if (job.urgency) setValue("urgency", job.urgency);
-        if (job.latitude) { setValue("latitude", job.latitude); setInitialLat(job.latitude); }
-        if (job.longitude) { setValue("longitude", job.longitude); setInitialLng(job.longitude); }
         setJobLoaded(true);
       })
       .catch(() => {
@@ -99,8 +92,6 @@ export default function EditJobPage({
         budgetMax: data.budgetMax ?? null,
         desiredDate: data.desiredDate || null,
         urgency: data.urgency ?? null,
-        latitude: data.latitude ?? null,
-        longitude: data.longitude ?? null,
       });
 
       if (result.error) {
@@ -156,11 +147,7 @@ export default function EditJobPage({
             <div className="space-y-2">
               <Label>Standort</Label>
               <LocationPicker
-                initialLat={initialLat}
-                initialLng={initialLng}
-                onLocationChange={({ lat, lng, city, zipCode }) => {
-                  setValue("latitude", lat);
-                  setValue("longitude", lng);
+                onLocationChange={({ city, zipCode }) => {
                   if (city) setValue("city", city);
                   if (zipCode) setValue("zipCode", zipCode);
                 }}

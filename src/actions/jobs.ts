@@ -31,8 +31,6 @@ export async function createJob(data: CreateJobInput) {
       description: validated.description,
       city: validated.city,
       zipCode: validated.zipCode,
-      latitude: validated.latitude ?? null,
-      longitude: validated.longitude ?? null,
       budgetMin: validated.budgetMin || null,
       budgetMax: validated.budgetMax || null,
       desiredDate: validated.desiredDate ? new Date(validated.desiredDate) : null,
@@ -92,8 +90,6 @@ export async function updateJob(
     description?: string;
     city?: string;
     zipCode?: string;
-    latitude?: number | null;
-    longitude?: number | null;
     budgetMin?: number | null;
     budgetMax?: number | null;
     desiredDate?: string | null;
@@ -126,8 +122,6 @@ export async function updateJob(
       ...(data.description !== undefined && { description: data.description }),
       ...(data.city !== undefined && { city: data.city }),
       ...(data.zipCode !== undefined && { zipCode: data.zipCode }),
-      ...(data.latitude !== undefined && { latitude: data.latitude }),
-      ...(data.longitude !== undefined && { longitude: data.longitude }),
       ...(data.budgetMin !== undefined && { budgetMin: data.budgetMin }),
       ...(data.budgetMax !== undefined && { budgetMax: data.budgetMax }),
       ...(data.desiredDate !== undefined && {
