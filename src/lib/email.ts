@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM = process.env.EMAIL_FROM ?? "noreply@werkspot.de";
+const FROM = process.env.EMAIL_FROM ?? "auftrag@fixwithfoxy.com";
 
 export async function sendJobAwardedEmail(
   to: string,
