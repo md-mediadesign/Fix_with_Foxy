@@ -1,14 +1,16 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { getProviderPublicProfile } from "@/actions/profile";
-import { Star, MapPin, Phone, Globe, CheckCircle2, Calendar, Briefcase } from "lucide-react";
+import { Star, MapPin, Phone, Globe, CheckCircle2, Calendar, Briefcase, Lock } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { getServerTranslations } from "@/lib/i18n/server";
+import { auth } from "@/lib/auth";
 
 export default async function ProviderProfilePage({
   params,
@@ -18,6 +20,8 @@ export default async function ProviderProfilePage({
   const { providerId } = await params;
   const provider = await getProviderPublicProfile(providerId);
   const t = await getServerTranslations();
+  const session = await auth();
+  const isLoggedIn = !!session?.user;
 
   if (!provider) notFound();
 
@@ -83,6 +87,39 @@ export default async function ProviderProfilePage({
 
           <Separator className="my-6" />
 
+          {/* Login Gate */}
+          {!isLoggedIn && (
+            <div className="relative mb-6 overflow-hidden rounded-2xl border border-orange-100">
+              {/* Blurred preview */}
+              <div className="select-none blur-sm pointer-events-none px-6 py-4 space-y-2">
+                <div className="h-4 w-48 rounded bg-gray-200" />
+                <div className="h-4 w-64 rounded bg-gray-200" />
+                <div className="h-4 w-36 rounded bg-gray-200" />
+              </div>
+              {/* Overlay */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm">
+                <Lock className="mb-3 h-8 w-8 text-orange-500" />
+                <p className="mb-4 text-center font-semibold text-blue-900">
+                  Melde dich an, um das vollständige Profil zu sehen
+                </p>
+                <div className="flex gap-3">
+                  <Link
+                    href={`/anmelden?callbackUrl=/handwerker/${providerId}`}
+                    className="rounded-full bg-orange-500 px-6 py-2.5 text-sm font-semibold text-white hover:bg-orange-600 transition-colors"
+                  >
+                    Anmelden
+                  </Link>
+                  <Link
+                    href={`/registrieren?callbackUrl=/handwerker/${providerId}`}
+                    className="rounded-full border-2 border-blue-900 px-6 py-2.5 text-sm font-semibold text-blue-900 hover:bg-blue-50 transition-colors"
+                  >
+                    Registrieren
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Categories */}
           <div className="flex flex-wrap gap-2">
             {provider.categories.map((pc) => (
@@ -104,90 +141,94 @@ export default async function ProviderProfilePage({
             </Card>
           )}
 
-          {/* Contact */}
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle>Kontakt</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="flex items-center gap-2 text-sm">
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-                {provider.city}, {provider.zipCode}
-                {provider.serviceRadius && ` (${t.publicProfile.serviceArea}: ${provider.serviceRadius} ${t.publicProfile.kmRadius})`}
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Phone className="h-4 w-4 text-muted-foreground" />
-                {provider.phone}
-              </div>
-            </CardContent>
-          </Card>
+          {isLoggedIn && (
+            <>
+              {/* Contact */}
+              <Card className="mt-6">
+                <CardHeader>
+                  <CardTitle>Kontakt</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm">
+                    <MapPin className="h-4 w-4 text-muted-foreground" />
+                    {provider.city}, {provider.zipCode}
+                    {provider.serviceRadius && ` (${t.publicProfile.serviceArea}: ${provider.serviceRadius} ${t.publicProfile.kmRadius})`}
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <Phone className="h-4 w-4 text-muted-foreground" />
+                    {provider.phone}
+                  </div>
+                </CardContent>
+              </Card>
 
-          {/* Portfolio */}
-          {provider.portfolioImages.length > 0 && (
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle>Portfolio</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                  {provider.portfolioImages.map((img) => (
-                    <div key={img.id} className="overflow-hidden rounded-lg">
-                      <img
-                        src={img.url}
-                        alt={img.caption || "Portfolio"}
-                        className="aspect-square w-full object-cover"
-                      />
-                      {img.caption && (
-                        <p className="mt-1 text-xs text-muted-foreground">{img.caption}</p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Reviews */}
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle>
-                {t.publicProfile.reviewsTitle} ({provider.totalReviews})
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {provider.reviews.length === 0 ? (
-                <p className="text-sm text-muted-foreground">{t.publicProfile.noReviews}</p>
-              ) : (
-                <div className="space-y-4">
-                  {provider.reviews.map((review) => (
-                    <div key={review.id} className="border-b pb-4 last:border-0 last:pb-0">
-                      <div className="flex items-center gap-2">
-                        <div className="flex">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star
-                              key={star}
-                              className={`h-4 w-4 ${
-                                star <= review.rating
-                                  ? "fill-yellow-400 text-yellow-400"
-                                  : "text-gray-300"
-                              }`}
-                            />
-                          ))}
+              {/* Portfolio */}
+              {provider.portfolioImages.length > 0 && (
+                <Card className="mt-6">
+                  <CardHeader>
+                    <CardTitle>Portfolio</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                      {provider.portfolioImages.map((img) => (
+                        <div key={img.id} className="overflow-hidden rounded-lg">
+                          <img
+                            src={img.url}
+                            alt={img.caption || "Portfolio"}
+                            className="aspect-square w-full object-cover"
+                          />
+                          {img.caption && (
+                            <p className="mt-1 text-xs text-muted-foreground">{img.caption}</p>
+                          )}
                         </div>
-                        <span className="text-sm text-muted-foreground">
-                          {format(review.createdAt, "dd. MMM yyyy", { locale: de })}
-                        </span>
-                      </div>
-                      {review.title && <h4 className="mt-1 font-medium">{review.title}</h4>}
-                      {review.comment && (
-                        <p className="mt-1 text-sm text-muted-foreground">{review.comment}</p>
-                      )}
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </CardContent>
+                </Card>
               )}
-            </CardContent>
-          </Card>
+
+              {/* Reviews */}
+              <Card className="mt-6">
+                <CardHeader>
+                  <CardTitle>
+                    {t.publicProfile.reviewsTitle} ({provider.totalReviews})
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {provider.reviews.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">{t.publicProfile.noReviews}</p>
+                  ) : (
+                    <div className="space-y-4">
+                      {provider.reviews.map((review) => (
+                        <div key={review.id} className="border-b pb-4 last:border-0 last:pb-0">
+                          <div className="flex items-center gap-2">
+                            <div className="flex">
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <Star
+                                  key={star}
+                                  className={`h-4 w-4 ${
+                                    star <= review.rating
+                                      ? "fill-yellow-400 text-yellow-400"
+                                      : "text-gray-300"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                            <span className="text-sm text-muted-foreground">
+                              {format(review.createdAt, "dd. MMM yyyy", { locale: de })}
+                            </span>
+                          </div>
+                          {review.title && <h4 className="mt-1 font-medium">{review.title}</h4>}
+                          {review.comment && (
+                            <p className="mt-1 text-sm text-muted-foreground">{review.comment}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </>
+          )}
         </div>
       </main>
       <Footer />

@@ -125,6 +125,30 @@ export async function changePassword(data: {
   return { success: true };
 }
 
+export async function searchProviders(query: string, city: string) {
+  return db.providerProfile.findMany({
+    where: {
+      isVerified: true,
+      user: { isActive: true },
+      ...(query && {
+        OR: [
+          { companyName: { contains: query, mode: "insensitive" } },
+          { user: { name: { contains: query, mode: "insensitive" } } },
+          { categories: { some: { category: { name: { contains: query, mode: "insensitive" } } } } },
+        ],
+      }),
+      ...(city && { city: { contains: city, mode: "insensitive" } }),
+    },
+    include: {
+      user: { select: { name: true, avatarUrl: true } },
+      categories: { include: { category: { select: { name: true } } } },
+      subscription: { select: { tier: true, status: true } },
+    },
+    orderBy: { averageRating: "desc" },
+    take: 30,
+  });
+}
+
 export async function getProviderPublicProfile(providerId: string) {
   return db.providerProfile.findUnique({
     where: { id: providerId },

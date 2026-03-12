@@ -74,25 +74,35 @@ export default function LandingPage() {
             {/* Text */}
             <div className="max-w-xl text-center md:text-left">
               <h1 className="text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-6xl">
-                Schlau repariert<br />
-                mit{" "}
-                <span className="text-orange-400">Foxy</span>
+                Finde den passenden Handwerker für deinen Auftrag
               </h1>
               <p className="mt-5 text-lg text-blue-100">
-                Die clevere Plattform, die zuverlässige Handwerker und Auftraggeber zusammenbringt. Schnell, transparent und fuchs-schlau!
+                Die Plattform, um schnell und einfach den richtigen Handwerker oder Dienstleister in deiner Nähe zu finden. Beschreibe deinen Auftrag und erhalte Angebote von geprüften Profis.
               </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center md:justify-start">
-                <Link
-                  href="/registrieren"
-                  className="inline-flex items-center justify-center rounded-full bg-orange-500 px-7 py-3 text-base font-semibold text-white shadow hover:bg-orange-600 transition-colors"
+              <form
+                method="GET"
+                action="/handwerker"
+                className="mt-8 flex max-w-md flex-col gap-2 sm:flex-row"
+              >
+                <input
+                  type="text"
+                  name="q"
+                  placeholder="z.B. Elektriker, Maler…"
+                  className="flex-1 rounded-full px-5 py-3 text-sm text-gray-900 outline-none"
+                />
+                <button
+                  type="submit"
+                  className="rounded-full bg-orange-500 px-7 py-3 text-sm font-semibold text-white hover:bg-orange-600 transition-colors"
                 >
-                  🔨 Handwerker finden
-                </Link>
+                  🔍 Suchen
+                </button>
+              </form>
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:justify-center md:justify-start">
                 <Link
                   href="/registrieren?tab=handwerker"
                   className="inline-flex items-center justify-center rounded-full border-2 border-white px-7 py-3 text-base font-semibold text-white hover:bg-white/10 transition-colors"
                 >
-                  📋 Aufträge erhalten
+                  📋 Als Handwerker registrieren
                 </Link>
               </div>
             </div>
@@ -129,7 +139,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="mt-12 grid grid-cols-2 gap-5 sm:grid-cols-3">
+          <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {FEATURED_CATEGORIES.map((cat) => (
               <Link
                 key={cat.slug}
@@ -144,9 +154,9 @@ export default function LandingPage() {
                     className="object-contain p-2 transition-transform group-hover:scale-105"
                   />
                 </div>
-                <div className="p-4">
-                  <h3 className="font-bold text-blue-900">{cat.name}</h3>
-                  <p className="mt-1 text-sm text-gray-500">{cat.desc}</p>
+                <div className="p-3 lg:p-2.5">
+                  <h3 className="font-bold text-blue-900 text-sm lg:text-sm">{cat.name}</h3>
+                  <p className="mt-1 text-xs text-gray-500 hidden lg:block">{cat.desc}</p>
                 </div>
               </Link>
             ))}
