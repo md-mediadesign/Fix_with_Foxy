@@ -128,7 +128,6 @@ export async function changePassword(data: {
 export async function searchProviders(query: string, city: string) {
   return db.providerProfile.findMany({
     where: {
-      isVerified: true,
       user: { isActive: true },
       ...(query && {
         OR: [
