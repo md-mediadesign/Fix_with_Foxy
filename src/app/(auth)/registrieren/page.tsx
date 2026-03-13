@@ -32,17 +32,6 @@ const CATEGORY_IMAGES: Record<string, string> = {
   "umzug-transport": "/categories/umzug.png",
 };
 
-const CATEGORY_DESCS: Record<string, string> = {
-  reinigung: "Professionelle Reinigungsdienste für Ihr Zuhause oder Büro.",
-  "garten-landschaft": "Gartenpflege, Landschaftsbau und Außenanlagen.",
-  "malerei-lackierung": "Innen- und Außenanstriche, Tapezieren und Lackieren.",
-  "montage-aufbau": "Allgemeine Reparaturen und Instandhaltung im Haus.",
-  elektrik: "Elektroinstallationen, Reparaturen und Wartung.",
-  "sanitaer-heizung": "Sanitärinstallationen, Rohrreinigung und Reparaturen.",
-  "dach-fassade": "Dachreparaturen, Dachrinnen und Fassadenarbeiten.",
-  schluesseldienst: "Türöffnung, Schlossaustausch und Einbruchschutz.",
-  "umzug-transport": "Umzugsservice, Möbeltransport und Entrümpelung.",
-};
 
 export default function RegistrierenPage() {
   const router = useRouter();
@@ -217,7 +206,7 @@ export default function RegistrierenPage() {
             <div className="grid grid-cols-3 gap-3">
               {categories.map((cat) => {
                 const img = CATEGORY_IMAGES[cat.slug];
-                const desc = CATEGORY_DESCS[cat.slug];
+                const desc = (t.categoryDescs as Record<string, string>)[cat.slug];
                 const isSelected = selectedCategories.includes(cat.id);
                 const translatedName = (t.categoryNames as Record<string, string>)[cat.slug] ?? cat.name;
                 return (
