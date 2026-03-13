@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Home, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -48,6 +49,7 @@ export function Header() {
 
         {/* Desktop buttons */}
         <div className="hidden items-center gap-3 md:flex">
+          <LanguageSwitcher />
           {session ? (
             <Link
               href={dashboardHref}
@@ -76,6 +78,7 @@ export function Header() {
 
         {/* Mobile menu */}
         <div className="flex items-center gap-2 md:hidden">
+          <LanguageSwitcher />
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <button className="rounded-md p-2 text-gray-600 hover:bg-gray-100">
