@@ -16,6 +16,7 @@ import {
 import { signIn } from "next-auth/react";
 import { registerClient, registerProvider } from "@/actions/auth";
 import { getCategories } from "@/actions/categories";
+import { useTranslations } from "@/components/locale-provider";
 
 type Category = { id: string; name: string; slug: string; icon: string | null };
 
@@ -51,6 +52,7 @@ export default function RegistrierenPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const t = useTranslations();
 
   useEffect(() => {
     getCategories().then(setCategories).catch(() => {});
@@ -93,7 +95,7 @@ export default function RegistrierenPage() {
   }
 
   async function onSubmitProvider(data: RegisterProviderInput) {
-    if (selectedCategories.length === 0) { toast.error("Bitte wähle mindestens eine Kategorie."); return; }
+    if (selectedCategories.length === 0) { toast.error(t.auth.categoriesMin); return; }
     setIsLoading(true);
     try {
       const result = await registerProvider({ ...data, categoryIds: selectedCategories });
@@ -116,8 +118,8 @@ export default function RegistrierenPage() {
         <div className="flex justify-center mb-4">
           <Image src="/foxy-head.png" alt="Foxy" width={64} height={64} className="h-16 w-16 object-contain" unoptimized />
         </div>
-        <h1 className="text-3xl font-bold text-blue-900">Registrieren</h1>
-        <p className="mt-2 text-gray-500">Wählen Sie Ihren Kontotyp und werden Sie Teil der Foxy-Community</p>
+        <h1 className="text-3xl font-bold text-blue-900">{t.auth.registerTitle}</h1>
+        <p className="mt-2 text-gray-500">{t.auth.registerSubtitle}</p>
       </div>
 
       {/* Tabs */}
@@ -130,7 +132,7 @@ export default function RegistrierenPage() {
               activeTab === "auftraggeber" ? "bg-white text-orange-500 shadow-sm" : "text-gray-500 hover:text-gray-700"
             }`}
           >
-            🏠 Auftraggeber
+            🏠 {t.auth.clientTab}
           </button>
           <button
             type="button"
@@ -139,7 +141,7 @@ export default function RegistrierenPage() {
               activeTab === "handwerker" ? "bg-white text-blue-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
             }`}
           >
-            🦊 Handwerker
+            🦊 {t.auth.providerTab}
           </button>
         </div>
       </div>
@@ -148,23 +150,23 @@ export default function RegistrierenPage() {
       {activeTab === "auftraggeber" && (
         <form onSubmit={handleSubmitC(onSubmitClient)} className="space-y-5 px-8 py-6">
           <div>
-            <label className={labelCls}>Name</label>
-            <input type="text" placeholder="Max Mustermann" autoComplete="name" disabled={isLoading} className={inputCls} {...registerC("name")} />
+            <label className={labelCls}>{t.auth.name}</label>
+            <input type="text" placeholder={t.auth.namePlaceholder} autoComplete="name" disabled={isLoading} className={inputCls} {...registerC("name")} />
             {errorsC.name && <p className={errorCls}>{errorsC.name.message}</p>}
           </div>
           <div>
-            <label className={labelCls}>E-Mail</label>
-            <input type="email" placeholder="max@beispiel.de" autoComplete="email" disabled={isLoading} className={inputCls} {...registerC("email")} />
+            <label className={labelCls}>{t.auth.email}</label>
+            <input type="email" placeholder={t.auth.emailPlaceholder} autoComplete="email" disabled={isLoading} className={inputCls} {...registerC("email")} />
             {errorsC.email && <p className={errorCls}>{errorsC.email.message}</p>}
           </div>
           <div>
-            <label className={labelCls}>Passwort</label>
-            <input type="password" placeholder="Mindestens 8 Zeichen" autoComplete="new-password" disabled={isLoading} className={inputCls} {...registerC("password")} />
+            <label className={labelCls}>{t.auth.password}</label>
+            <input type="password" placeholder={t.auth.passwordMinHint} autoComplete="new-password" disabled={isLoading} className={inputCls} {...registerC("password")} />
             {errorsC.password && <p className={errorCls}>{errorsC.password.message}</p>}
           </div>
           <div>
-            <label className={labelCls}>Stadt</label>
-            <input type="text" placeholder="Berlin" disabled={isLoading} className={inputCls} {...registerC("city")} />
+            <label className={labelCls}>{t.auth.city}</label>
+            <input type="text" placeholder={t.auth.cityPlaceholder} disabled={isLoading} className={inputCls} {...registerC("city")} />
             {errorsC.city && <p className={errorCls}>{errorsC.city.message}</p>}
           </div>
           <button
@@ -172,7 +174,7 @@ export default function RegistrierenPage() {
             disabled={isLoading}
             className="w-full rounded-full bg-orange-500 py-3.5 text-base font-semibold text-white hover:bg-orange-600 transition-colors disabled:opacity-50"
           >
-            {isLoading ? "Wird erstellt…" : "Als Auftraggeber registrieren"}
+            {isLoading ? t.auth.creating : t.auth.registerClientBtn}
           </button>
         </form>
       )}
@@ -182,33 +184,33 @@ export default function RegistrierenPage() {
         <form onSubmit={handleSubmitP(onSubmitProvider)} className="space-y-5 px-8 py-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className={labelCls}>Name / Firmenname</label>
-              <input type="text" placeholder="Max Mustermann" autoComplete="name" disabled={isLoading} className={inputCls} {...registerP("name")} />
+              <label className={labelCls}>{t.auth.nameOrCompany}</label>
+              <input type="text" placeholder={t.auth.namePlaceholder} autoComplete="name" disabled={isLoading} className={inputCls} {...registerP("name")} />
               {errorsP.name && <p className={errorCls}>{errorsP.name.message}</p>}
             </div>
             <div>
-              <label className={labelCls}>E-Mail</label>
-              <input type="email" placeholder="max@beispiel.de" autoComplete="email" disabled={isLoading} className={inputCls} {...registerP("email")} />
+              <label className={labelCls}>{t.auth.email}</label>
+              <input type="email" placeholder={t.auth.emailPlaceholder} autoComplete="email" disabled={isLoading} className={inputCls} {...registerP("email")} />
               {errorsP.email && <p className={errorCls}>{errorsP.email.message}</p>}
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className={labelCls}>Passwort</label>
-              <input type="password" placeholder="Mindestens 8 Zeichen" autoComplete="new-password" disabled={isLoading} className={inputCls} {...registerP("password")} />
+              <label className={labelCls}>{t.auth.password}</label>
+              <input type="password" placeholder={t.auth.passwordMinHint} autoComplete="new-password" disabled={isLoading} className={inputCls} {...registerP("password")} />
               {errorsP.password && <p className={errorCls}>{errorsP.password.message}</p>}
             </div>
             <div>
-              <label className={labelCls}>Stadt / Einsatzgebiet</label>
-              <input type="text" placeholder="Berlin" disabled={isLoading} className={inputCls} {...registerP("city")} />
+              <label className={labelCls}>{t.auth.cityArea}</label>
+              <input type="text" placeholder={t.auth.cityPlaceholder} disabled={isLoading} className={inputCls} {...registerP("city")} />
               {errorsP.city && <p className={errorCls}>{errorsP.city.message}</p>}
             </div>
           </div>
 
           {/* Category selection */}
           <div>
-            <h3 className="mb-1 text-base font-bold text-blue-900">Wählen Sie Ihre Handwerkskategorien</h3>
-            <p className="mb-4 text-sm text-gray-500">Wählen Sie mindestens eine Kategorie aus, in der Sie Aufträge erhalten möchten.</p>
+            <h3 className="mb-1 text-base font-bold text-blue-900">{t.auth.categoriesTitle}</h3>
+            <p className="mb-4 text-sm text-gray-500">{t.auth.categoriesDesc}</p>
             {errorsP.categoryIds && (
               <p className="mb-3 text-sm text-orange-500">Bitte wählen Sie mindestens eine Kategorie.</p>
             )}
@@ -248,15 +250,15 @@ export default function RegistrierenPage() {
             disabled={isLoading}
             className="w-full rounded-full bg-blue-900 py-3.5 text-base font-semibold text-white hover:bg-blue-800 transition-colors disabled:opacity-50"
           >
-            {isLoading ? "Wird erstellt…" : "Als Handwerker registrieren"}
+            {isLoading ? t.auth.creating : t.auth.registerProviderBtn}
           </button>
         </form>
       )}
 
       <div className="border-t border-gray-100 px-8 py-5 text-center text-sm text-gray-500">
-        Bereits registriert?{" "}
+        {t.auth.hasAccount}{" "}
         <Link href="/anmelden" className="font-semibold text-orange-500 hover:underline">
-          Jetzt anmelden
+          {t.auth.loginNow}
         </Link>
       </div>
     </div>

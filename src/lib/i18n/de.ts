@@ -165,6 +165,16 @@ export const de = {
     categoriesMin: "Wähle mindestens eine Kategorie",
     categoriesLoading: "Kategorien werden geladen...",
     categoriesError: "Kategorien konnten nicht geladen werden.",
+    registerTitle: "Registrieren",
+    registerSubtitle: "Wählen Sie Ihren Kontotyp und werden Sie Teil der Foxy-Community",
+    clientTab: "Auftraggeber",
+    providerTab: "Handwerker",
+    nameOrCompany: "Name / Firmenname",
+    cityArea: "Stadt / Einsatzgebiet",
+    registerClientBtn: "Als Auftraggeber registrieren",
+    registerProviderBtn: "Als Handwerker registrieren",
+    categoriesTitle: "Wählen Sie Ihre Handwerkskategorien",
+    unexpectedError: "Ein unerwarteter Fehler ist aufgetreten.",
   },
   pricing: {
     title: "Preise & Pakete",
@@ -578,6 +588,11 @@ export const de = {
     servicesIn: "Dienstleistungen in",
     reviewsTitle: "Bewertungen",
     noReviews: "Noch keine Bewertungen vorhanden.",
+    searchTitle: "Handwerker & Dienstleister finden",
+    citySearchPlaceholder: "Ort / Stadt",
+    noProviders: "Keine Dienstleister gefunden. Versuche andere Suchbegriffe.",
+    providersFound: "Dienstleister gefunden",
+    viewProfile: "Profil ansehen",
   },
   // Legal
   legal: {

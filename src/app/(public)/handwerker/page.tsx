@@ -4,6 +4,7 @@ import { Footer } from "@/components/layout/footer";
 import { searchProviders } from "@/actions/profile";
 import { Star, MapPin, CheckCircle2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { getServerTranslations } from "@/lib/i18n/server";
 
 export default async function HandwerkerSuchePage({
   searchParams,
@@ -11,7 +12,7 @@ export default async function HandwerkerSuchePage({
   searchParams: Promise<{ q?: string; ort?: string }>;
 }) {
   const { q = "", ort = "" } = await searchParams;
-  const providers = await searchProviders(q, ort);
+  const [providers, t] = await Promise.all([searchProviders(q, ort), getServerTranslations()]);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -21,28 +22,28 @@ export default async function HandwerkerSuchePage({
         <div className="bg-blue-900 py-10">
           <div className="mx-auto max-w-3xl px-4">
             <h1 className="mb-6 text-center text-3xl font-extrabold text-white">
-              Handwerker & Dienstleister finden
+              {t.publicProfile.searchTitle}
             </h1>
             <form method="GET" className="flex flex-col gap-3 sm:flex-row">
               <input
                 type="text"
                 name="q"
                 defaultValue={q}
-                placeholder="z.B. Elektriker, Maler, Klempner…"
+                placeholder={t.landing.searchPlaceholder}
                 className="flex-1 rounded-full px-5 py-3 text-sm outline-none"
               />
               <input
                 type="text"
                 name="ort"
                 defaultValue={ort}
-                placeholder="Ort / Stadt"
+                placeholder={t.publicProfile.citySearchPlaceholder}
                 className="w-full rounded-full px-5 py-3 text-sm outline-none sm:w-48"
               />
               <button
                 type="submit"
                 className="rounded-full bg-orange-500 px-7 py-3 text-sm font-semibold text-white hover:bg-orange-600 transition-colors"
               >
-                Suchen
+                {t.common.search}
               </button>
             </form>
           </div>
@@ -52,12 +53,12 @@ export default async function HandwerkerSuchePage({
         <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
           {providers.length === 0 ? (
             <p className="text-center text-gray-500">
-              Keine Dienstleister gefunden. Versuche andere Suchbegriffe.
+              {t.publicProfile.noProviders}
             </p>
           ) : (
             <>
               <p className="mb-6 text-sm text-gray-500">
-                {providers.length} Dienstleister gefunden
+                {providers.length} {t.publicProfile.providersFound}
               </p>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {providers.map((p) => {
@@ -126,7 +127,7 @@ export default async function HandwerkerSuchePage({
                         )}
                       </div>
                       <p className="mt-3 text-xs font-medium text-orange-500 group-hover:underline">
-                        Profil ansehen →
+                        {t.publicProfile.viewProfile} →
                       </p>
                     </Link>
                   );

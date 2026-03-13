@@ -8,10 +8,12 @@ import { toast } from "sonner";
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 import { loginAction } from "@/actions/auth";
 import { Hammer, Eye, EyeOff } from "lucide-react";
+import { useTranslations } from "@/components/locale-provider";
 
 export default function AnmeldenPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const t = useTranslations();
 
   const {
     register,
@@ -30,7 +32,7 @@ export default function AnmeldenPage() {
         setIsLoading(false);
       }
     } catch {
-      toast.error("Ein unerwarteter Fehler ist aufgetreten.");
+      toast.error(t.auth.unexpectedError);
       setIsLoading(false);
     }
   }
@@ -43,15 +45,15 @@ export default function AnmeldenPage() {
         </div>
       </div>
 
-      <h1 className="text-center text-3xl font-bold text-gray-900">Anmelden</h1>
-      <p className="mt-2 text-center text-gray-500">Melden Sie sich mit Ihrem Konto an</p>
+      <h1 className="text-center text-3xl font-bold text-gray-900">{t.auth.loginTitle}</h1>
+      <p className="mt-2 text-center text-gray-500">{t.auth.loginDesc}</p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-7 space-y-5">
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">E-Mail</label>
+          <label className="mb-1.5 block text-sm font-medium text-gray-700">{t.auth.email}</label>
           <input
             type="email"
-            placeholder="ihre@email.de"
+            placeholder={t.auth.emailPlaceholder}
             autoComplete="email"
             disabled={isLoading}
             className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:opacity-50"
@@ -61,7 +63,7 @@ export default function AnmeldenPage() {
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">Passwort</label>
+          <label className="mb-1.5 block text-sm font-medium text-gray-700">{t.auth.password}</label>
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
@@ -88,14 +90,14 @@ export default function AnmeldenPage() {
           disabled={isLoading}
           className="w-full rounded-full bg-orange-500 py-3.5 text-base font-semibold text-white hover:bg-orange-600 transition-colors disabled:opacity-50"
         >
-          {isLoading ? "Wird angemeldet…" : "Anmelden"}
+          {isLoading ? t.auth.loggingIn : t.auth.loginButton}
         </button>
       </form>
 
       <p className="mt-6 text-center text-sm text-gray-500">
-        Noch kein Konto?{" "}
+        {t.auth.noAccount}{" "}
         <Link href="/registrieren" className="font-medium text-blue-600 hover:underline">
-          Jetzt registrieren
+          {t.auth.registerNow}
         </Link>
       </p>
     </div>
