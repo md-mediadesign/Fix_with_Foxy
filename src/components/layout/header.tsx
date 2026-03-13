@@ -7,10 +7,12 @@ import { Menu, Home, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { useTranslations } from "@/components/locale-provider";
 
 export function Header() {
   const [open, setOpen] = useState(false);
   const { data: session } = useSession();
+  const t = useTranslations();
   const dashboardHref =
     session?.user?.role === "PROVIDER"
       ? "/anbieter/dashboard"
@@ -43,7 +45,7 @@ export function Header() {
             <Home className="h-4 w-4" /> Home
           </Link>
           <Link href="/anmelden" className="text-sm font-medium text-gray-600 hover:text-blue-900 transition-colors">
-            Anmelden
+            {t.nav.login}
           </Link>
         </nav>
 
@@ -64,13 +66,13 @@ export function Header() {
                 href="/anmelden"
                 className="rounded-full border-2 border-blue-900 px-5 py-1.5 text-sm font-semibold text-blue-900 hover:bg-blue-50 transition-colors"
               >
-                Anmelden
+                {t.nav.login}
               </Link>
               <Link
                 href="/registrieren"
                 className="rounded-full bg-orange-500 px-5 py-1.5 text-sm font-semibold text-white hover:bg-orange-600 transition-colors"
               >
-                Registrieren
+                {t.nav.register}
               </Link>
             </>
           )}
@@ -107,14 +109,14 @@ export function Header() {
                         className="rounded-full border-2 border-blue-900 px-5 py-2 text-center text-sm font-semibold text-blue-900"
                         onClick={() => setOpen(false)}
                       >
-                        Anmelden
+                        {t.nav.login}
                       </Link>
                       <Link
                         href="/registrieren"
                         className="rounded-full bg-orange-500 px-5 py-2 text-center text-sm font-semibold text-white"
                         onClick={() => setOpen(false)}
                       >
-                        Registrieren
+                        {t.nav.register}
                       </Link>
                     </>
                   )}
