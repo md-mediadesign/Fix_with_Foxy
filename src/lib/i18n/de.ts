@@ -50,6 +50,8 @@ export const de = {
     privacy: "Datenschutz",
     terms: "AGB",
     allRightsReserved: "Alle Rechte vorbehalten.",
+    tagline: "Die clevere Plattform für Handwerker und Auftraggeber.",
+    copyright: "Alle Rechte vorbehalten.",
   },
   landing: {
     heroTitle: "Finde den perfekten Handwerker für dein Projekt",

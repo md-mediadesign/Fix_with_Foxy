@@ -1,7 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
+import { getServerTranslations } from "@/lib/i18n/server";
 
-export function Footer() {
+export async function Footer() {
+  const t = await getServerTranslations();
+
   return (
     <footer className="border-t border-gray-100 bg-white">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -15,39 +18,39 @@ export function Footer() {
               </span>
             </Link>
             <p className="mt-3 text-sm text-gray-500">
-              Die clevere Plattform für Handwerker und Auftraggeber.
+              {t.footer.tagline}
             </p>
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-gray-900">Auftraggeber</h3>
+            <h3 className="text-sm font-semibold text-gray-900">{t.footer.clients}</h3>
             <ul className="mt-3 space-y-2">
-              <li><Link href="/registrieren" className="text-sm text-gray-500 hover:text-blue-900">Kostenlos registrieren</Link></li>
-              <li><Link href="/so-funktionierts" className="text-sm text-gray-500 hover:text-blue-900">So funktioniert&apos;s</Link></li>
-              <li><Link href="/kategorien" className="text-sm text-gray-500 hover:text-blue-900">Kategorien</Link></li>
+              <li><Link href="/registrieren" className="text-sm text-gray-500 hover:text-blue-900">{t.footer.registerFree}</Link></li>
+              <li><Link href="/so-funktionierts" className="text-sm text-gray-500 hover:text-blue-900">{t.footer.howItWorks}</Link></li>
+              <li><Link href="/kategorien" className="text-sm text-gray-500 hover:text-blue-900">{t.footer.categories}</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-gray-900">Dienstleister</h3>
+            <h3 className="text-sm font-semibold text-gray-900">{t.footer.providers}</h3>
             <ul className="mt-3 space-y-2">
-              <li><Link href="/registrieren?tab=handwerker" className="text-sm text-gray-500 hover:text-blue-900">Als Anbieter starten</Link></li>
-              <li><Link href="/preise" className="text-sm text-gray-500 hover:text-blue-900">Preise &amp; Pakete</Link></li>
+              <li><Link href="/registrieren?tab=handwerker" className="text-sm text-gray-500 hover:text-blue-900">{t.footer.startAsProvider}</Link></li>
+              <li><Link href="/preise" className="text-sm text-gray-500 hover:text-blue-900">{t.footer.pricingPackages}</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-gray-900">Rechtliches</h3>
+            <h3 className="text-sm font-semibold text-gray-900">{t.footer.legal}</h3>
             <ul className="mt-3 space-y-2">
-              <li><Link href="/impressum" className="text-sm text-gray-500 hover:text-blue-900">Impressum</Link></li>
-              <li><Link href="/datenschutz" className="text-sm text-gray-500 hover:text-blue-900">Datenschutz</Link></li>
-              <li><Link href="/agb" className="text-sm text-gray-500 hover:text-blue-900">AGB</Link></li>
+              <li><Link href="/impressum" className="text-sm text-gray-500 hover:text-blue-900">{t.footer.imprint}</Link></li>
+              <li><Link href="/datenschutz" className="text-sm text-gray-500 hover:text-blue-900">{t.footer.privacy}</Link></li>
+              <li><Link href="/agb" className="text-sm text-gray-500 hover:text-blue-900">{t.footer.terms}</Link></li>
             </ul>
           </div>
         </div>
 
         <div className="mt-8 border-t border-gray-100 pt-8 text-center text-sm text-gray-400">
-          © {new Date().getFullYear()} Fix it with Foxy. Alle Rechte vorbehalten.
+          © {new Date().getFullYear()} Fix it with Foxy. {t.footer.allRightsReserved}
         </div>
       </div>
     </footer>

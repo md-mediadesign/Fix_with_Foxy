@@ -50,6 +50,8 @@ export const en = {
     privacy: "Privacy Policy",
     terms: "Terms & Conditions",
     allRightsReserved: "All rights reserved.",
+    tagline: "The smart platform for craftsmen and clients.",
+    copyright: "All rights reserved.",
   },
   landing: {
     heroTitle: "Find the perfect craftsman for your project",
