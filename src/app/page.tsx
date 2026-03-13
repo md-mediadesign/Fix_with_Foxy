@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { MapPin, Clock, Star, ShieldCheck } from "lucide-react";
+import { Search, MessageCircle, ShieldCheck, Star, ClipboardList, FileText } from "lucide-react";
 
 const FEATURED_CATEGORIES = [
   {
@@ -72,9 +72,9 @@ export default function LandingPage() {
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
           <div className="flex flex-col items-center gap-10 md:flex-row md:items-center md:justify-between">
             {/* Text */}
-            <div className="max-w-xl text-center md:text-left">
+            <div className="max-w-2xl text-center md:text-left">
               <h1 className="text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-6xl">
-                Finde den passenden Handwerker für deinen Auftrag
+                Finde den passenden Handwerker<br />für deinen Auftrag
               </h1>
               <p className="mt-5 text-lg text-blue-100">
                 Die Plattform, um schnell und einfach den richtigen Handwerker oder Dienstleister in deiner Nähe zu finden. Beschreibe deinen Auftrag und erhalte Angebote von geprüften Profis.
@@ -88,7 +88,7 @@ export default function LandingPage() {
                   type="text"
                   name="q"
                   placeholder="z.B. Elektriker, Maler…"
-                  className="flex-1 rounded-full px-5 py-3 text-sm text-gray-900 outline-none"
+                  className="flex-1 rounded-full bg-white px-5 py-3 text-sm text-gray-900 shadow outline-none"
                 />
                 <button
                   type="submit"
@@ -195,21 +195,21 @@ export default function LandingPage() {
               </div>
               <ul className="space-y-5 p-6">
                 <li className="flex items-start gap-4">
-                  <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-orange-500" />
+                  <ClipboardList className="mt-0.5 h-5 w-5 shrink-0 text-orange-500" />
                   <div>
                     <p className="font-semibold text-blue-900">Auftrag erstellen</p>
                     <p className="text-sm text-gray-500">Beschreiben Sie Ihr Projekt mit Details und Budget</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-4">
-                  <Clock className="mt-0.5 h-5 w-5 shrink-0 text-orange-500" />
+                  <MessageCircle className="mt-0.5 h-5 w-5 shrink-0 text-orange-500" />
                   <div>
                     <p className="font-semibold text-blue-900">Angebote vergleichen</p>
                     <p className="text-sm text-gray-500">Erhalten Sie Angebote von qualifizierten Handwerkern</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-4">
-                  <Star className="mt-0.5 h-5 w-5 shrink-0 text-orange-500" />
+                  <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-orange-500" />
                   <div>
                     <p className="font-semibold text-blue-900">Handwerker wählen</p>
                     <p className="text-sm text-gray-500">Wählen Sie basierend auf Preis, Bewertungen und Erfahrung</p>
@@ -229,21 +229,21 @@ export default function LandingPage() {
               </div>
               <ul className="space-y-5 p-6">
                 <li className="flex items-start gap-4">
-                  <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" />
+                  <Search className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" />
                   <div>
                     <p className="font-semibold text-blue-900">Aufträge durchsuchen</p>
                     <p className="text-sm text-gray-500">Finden Sie passende Projekte in Ihrer Nähe</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-4">
-                  <Clock className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" />
+                  <FileText className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" />
                   <div>
                     <p className="font-semibold text-blue-900">Angebot erstellen</p>
                     <p className="text-sm text-gray-500">Senden Sie Ihr Angebot mit Preis und Zeitrahmen</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-4">
-                  <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" />
+                  <Star className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" />
                   <div>
                     <p className="font-semibold text-blue-900">Bewertungen sammeln</p>
                     <p className="text-sm text-gray-500">Bauen Sie Ihren Ruf durch positive Bewertungen auf</p>
