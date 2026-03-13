@@ -15,7 +15,7 @@ export default async function PricingPage() {
     {
       name: t.pricing.basic,
       price: "29",
-      description: "Ideal für den Einstieg",
+      description: t.pricing.basicDesc,
       features: PLAN_FEATURES.BASIC,
       popular: false,
       tier: "BASIC",
@@ -23,7 +23,7 @@ export default async function PricingPage() {
     {
       name: t.pricing.pro,
       price: "50",
-      description: "Für wachsende Betriebe",
+      description: t.pricing.proDesc,
       features: PLAN_FEATURES.PRO,
       popular: true,
       tier: "PRO",
@@ -31,7 +31,7 @@ export default async function PricingPage() {
     {
       name: t.pricing.premium,
       price: "139",
-      description: "Maximale Sichtbarkeit",
+      description: t.pricing.premiumDesc,
       features: PLAN_FEATURES.PREMIUM,
       popular: false,
       tier: "PREMIUM",
@@ -107,7 +107,7 @@ export default async function PricingPage() {
 
             <div className="mt-12 text-center text-sm text-muted-foreground">
               <p>
-                Alle Preise zzgl. MwSt. Monatlich kündbar. Keine versteckten Kosten.
+                {t.pricing.disclaimer}
               </p>
             </div>
           </div>

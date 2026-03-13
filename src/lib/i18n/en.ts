@@ -197,6 +197,10 @@ export const en = {
     freeForClients: "Free for clients",
     freeForClientsDesc: "As a client, you can use Werkspot completely free. Create jobs, receive quotes, and choose the best craftsman.",
     registerNow: "Register now",
+    basicDesc: "Ideal for getting started",
+    proDesc: "For growing businesses",
+    premiumDesc: "Maximum visibility",
+    disclaimer: "All prices excl. VAT. Cancel monthly. No hidden costs.",
   },
   howItWorks: {
     title: "How Werkspot works",
@@ -596,6 +600,9 @@ export const en = {
     noProviders: "No service providers found. Try different search terms.",
     providersFound: "service providers found",
     viewProfile: "View profile",
+    loginGateMessage: "Sign in to see the full profile",
+    contact: "Contact",
+    register: "Register",
   },
   legal: {
     imprintTitle: "Imprint",

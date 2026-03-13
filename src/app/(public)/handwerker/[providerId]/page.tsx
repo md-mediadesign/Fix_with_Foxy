@@ -100,20 +100,20 @@ export default async function ProviderProfilePage({
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm">
                 <Lock className="mb-3 h-8 w-8 text-orange-500" />
                 <p className="mb-4 text-center font-semibold text-blue-900">
-                  Melde dich an, um das vollständige Profil zu sehen
+                  {t.publicProfile.loginGateMessage}
                 </p>
                 <div className="flex gap-3">
                   <Link
                     href={`/anmelden?callbackUrl=/handwerker/${providerId}`}
                     className="rounded-full bg-orange-500 px-6 py-2.5 text-sm font-semibold text-white hover:bg-orange-600 transition-colors"
                   >
-                    Anmelden
+                    {t.auth.loginButton}
                   </Link>
                   <Link
                     href={`/registrieren?callbackUrl=/handwerker/${providerId}`}
                     className="rounded-full border-2 border-blue-900 px-6 py-2.5 text-sm font-semibold text-blue-900 hover:bg-blue-50 transition-colors"
                   >
-                    Registrieren
+                    {t.publicProfile.register}
                   </Link>
                 </div>
               </div>
@@ -146,7 +146,7 @@ export default async function ProviderProfilePage({
               {/* Contact */}
               <Card className="mt-6">
                 <CardHeader>
-                  <CardTitle>Kontakt</CardTitle>
+                  <CardTitle>{t.publicProfile.contact}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <div className="flex items-center gap-2 text-sm">

@@ -199,6 +199,10 @@ export const de = {
     freeForClients: "Für Auftraggeber kostenlos",
     freeForClientsDesc: "Als Auftraggeber kannst du Werkspot komplett kostenlos nutzen. Erstelle Aufträge, erhalte Angebote und wähle den besten Handwerker.",
     registerNow: "Jetzt registrieren",
+    basicDesc: "Ideal für den Einstieg",
+    proDesc: "Für wachsende Betriebe",
+    premiumDesc: "Maximale Sichtbarkeit",
+    disclaimer: "Alle Preise zzgl. MwSt. Monatlich kündbar. Keine versteckten Kosten.",
   },
   howItWorks: {
     title: "So funktioniert Werkspot",
@@ -611,6 +615,9 @@ export const de = {
     noProviders: "Keine Dienstleister gefunden. Versuche andere Suchbegriffe.",
     providersFound: "Dienstleister gefunden",
     viewProfile: "Profil ansehen",
+    loginGateMessage: "Melde dich an, um das vollständige Profil zu sehen",
+    contact: "Kontakt",
+    register: "Registrieren",
   },
   // Legal
   legal: {
