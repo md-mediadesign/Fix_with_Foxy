@@ -226,6 +226,22 @@ export const de = {
     subtitle: "Finde den passenden Handwerker für dein Projekt",
     openJobs: "offene Aufträge",
   },
+  categoryNames: {
+    "dach-fassade": "Dach & Fassade",
+    "elektrik": "Elektrik",
+    "fliesen-boden": "Fliesen & Boden",
+    "garten-landschaft": "Garten & Landschaft",
+    "malerei-lackierung": "Malerei & Lackierung",
+    "marketing": "Marketing",
+    "mediadesign": "Mediadesign",
+    "montage-aufbau": "Montage & Aufbau",
+    "reinigung": "Reinigung",
+    "sanitaer-heizung": "Sanitär & Heizung",
+    "schluesseldienst": "Schlüsseldienst",
+    "schreiner-tischler": "Schreiner & Tischler",
+    "sonstiges": "Sonstiges",
+    "umzug-transport": "Umzug & Transport",
+  },
   // Client Dashboard
   dashboard: {
     title: "Kundenbereich",

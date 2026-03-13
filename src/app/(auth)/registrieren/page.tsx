@@ -212,13 +212,14 @@ export default function RegistrierenPage() {
             <h3 className="mb-1 text-base font-bold text-blue-900">{t.auth.categoriesTitle}</h3>
             <p className="mb-4 text-sm text-gray-500">{t.auth.categoriesDesc}</p>
             {errorsP.categoryIds && (
-              <p className="mb-3 text-sm text-orange-500">Bitte wählen Sie mindestens eine Kategorie.</p>
+              <p className="mb-3 text-sm text-orange-500">{t.auth.categoriesMin}</p>
             )}
             <div className="grid grid-cols-3 gap-3">
               {categories.map((cat) => {
                 const img = CATEGORY_IMAGES[cat.slug];
                 const desc = CATEGORY_DESCS[cat.slug];
                 const isSelected = selectedCategories.includes(cat.id);
+                const translatedName = (t.categoryNames as Record<string, string>)[cat.slug] ?? cat.name;
                 return (
                   <button
                     key={cat.id}
@@ -236,7 +237,7 @@ export default function RegistrierenPage() {
                       <div className="flex aspect-video items-center justify-center bg-blue-50 text-3xl">🔧</div>
                     )}
                     <div className="p-2.5">
-                      <p className="text-xs font-bold text-blue-900">{cat.name}</p>
+                      <p className="text-xs font-bold text-blue-900">{translatedName}</p>
                       {desc && <p className="mt-0.5 text-xs text-gray-400 line-clamp-2">{desc}</p>}
                     </div>
                   </button>
