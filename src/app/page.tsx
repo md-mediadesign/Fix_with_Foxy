@@ -6,15 +6,15 @@ import { Search, MessageCircle, ShieldCheck, Star, ClipboardList, FileText } fro
 import { getServerTranslations } from "@/lib/i18n/server";
 
 const FEATURED_CATEGORIES = [
-  { slugKey: "reinigung", name: "Putzen", image: "/categories/cleaner.png", desc: "Professionelle Reinigungsdienste für Ihr Zuhause oder Büro." },
-  { slugKey: "garten-landschaft", name: "Gartenarbeit", image: "/categories/gaertner.png", desc: "Gartenpflege, Landschaftsbau und Außenanlagen." },
-  { slugKey: "malerei-lackierung", name: "Malerarbeiten", image: "/categories/maler.png", desc: "Innen- und Außenanstriche, Tapezieren und Lackieren." },
-  { slugKey: "montage-aufbau", name: "Reparaturen", image: "/categories/montage.jpg", desc: "Allgemeine Reparaturen und Instandhaltung im Haus." },
-  { slugKey: "elektrik", name: "Elektrik", image: "/categories/elektrik.png", desc: "Elektroinstallationen, Reparaturen und Wartung." },
-  { slugKey: "sanitaer-heizung", name: "Klempnerei", image: "/categories/sanitaer.png", desc: "Sanitärinstallationen, Rohrreinigung und Reparaturen." },
-  { slugKey: "dach-fassade", name: "Dach & Fassade", image: "/categories/dach.png", desc: "Dachreparaturen, Dachrinnen und Fassadenarbeiten." },
-  { slugKey: "schluesseldienst", name: "Schlüsseldienst", image: "/categories/schluesseldienst.png", desc: "Türöffnung, Schlossaustausch und Einbruchschutz." },
-  { slugKey: "umzug-transport", name: "Umzug & Transport", image: "/categories/umzug.png", desc: "Umzugsservice, Möbeltransport und Entrümpelung." },
+  { slugKey: "reinigung", image: "/categories/cleaner.png" },
+  { slugKey: "garten-landschaft", image: "/categories/gaertner.png" },
+  { slugKey: "malerei-lackierung", image: "/categories/maler.png" },
+  { slugKey: "montage-aufbau", image: "/categories/montage.jpg" },
+  { slugKey: "elektrik", image: "/categories/elektrik.png" },
+  { slugKey: "sanitaer-heizung", image: "/categories/sanitaer.png" },
+  { slugKey: "dach-fassade", image: "/categories/dach.png" },
+  { slugKey: "schluesseldienst", image: "/categories/schluesseldienst.png" },
+  { slugKey: "umzug-transport", image: "/categories/umzug.png" },
 ];
 
 export default async function LandingPage() {
@@ -92,7 +92,10 @@ export default async function LandingPage() {
           </div>
 
           <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            {FEATURED_CATEGORIES.map((cat) => (
+            {FEATURED_CATEGORIES.map((cat) => {
+              const name = (t.categoryNames as Record<string, string>)[cat.slugKey] ?? cat.slugKey;
+              const desc = (t.categoryDescs as Record<string, string>)[cat.slugKey];
+              return (
               <Link
                 key={cat.slugKey}
                 href={`/registrieren?kategorie=${cat.slugKey}`}
@@ -101,17 +104,18 @@ export default async function LandingPage() {
                 <div className="relative aspect-video overflow-hidden bg-gray-50">
                   <Image
                     src={cat.image}
-                    alt={cat.name}
+                    alt={name}
                     fill
                     className="object-contain p-2 transition-transform group-hover:scale-105"
                   />
                 </div>
                 <div className="p-3 lg:p-2.5">
-                  <h3 className="font-bold text-blue-900 text-sm lg:text-sm">{cat.name}</h3>
-                  <p className="mt-1 text-xs text-gray-500 hidden lg:block">{cat.desc}</p>
+                  <h3 className="font-bold text-blue-900 text-sm lg:text-sm">{name}</h3>
+                  {desc && <p className="mt-1 text-xs text-gray-500 hidden lg:block">{desc}</p>}
                 </div>
               </Link>
-            ))}
+              );
+            })}
           </div>
 
           <div className="mt-10 text-center">
