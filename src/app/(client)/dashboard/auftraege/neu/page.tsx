@@ -120,7 +120,7 @@ export default function NewJobPage() {
 
   useEffect(() => {
     getCategories().then((cats) => {
-      setCategories(cats);
+      setCategories(cats.filter((c) => c.slug !== "marketing" && c.slug !== "mediadesign"));
       setLoadingCategories(false);
     });
   }, []);
