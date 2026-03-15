@@ -23,7 +23,7 @@ export default async function CurrentJobsPage() {
     where: {
       status: "OPEN",
       deletedAt: null,
-      userId: { not: session.user.id },
+      client: { userId: { not: session.user.id } },
     },
     include: {
       category: true,

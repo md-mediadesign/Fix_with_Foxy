@@ -16,7 +16,8 @@ export function LocationPicker({ onLocationChange }: LocationPickerProps) {
   const mapRef = useRef<LeafletMap | null>(null);
   const markerRef = useRef<LeafletMarker | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const iconRef = useRef<ReturnType<typeof import("leaflet")["default"]["divIcon"]> | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const iconRef = useRef<any>(null);
   const [locating, setLocating] = useState(false);
 
   async function reverseGeocode(lat: number, lng: number) {
