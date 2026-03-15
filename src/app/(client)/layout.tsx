@@ -25,6 +25,7 @@ export default async function ClientLayout({
     { href: "/dashboard", label: t.dashboard.title, icon: "LayoutDashboard" },
     { href: "/dashboard/auftraege", label: t.dashboard.myJobs, icon: "Briefcase" },
     { href: "/dashboard/auftraege/neu", label: t.dashboard.newJob, icon: "PlusCircle" },
+    { href: "/dashboard/aktuelle-auftraege", label: t.dashboard.currentJobs, icon: "Globe" },
     { href: "/dashboard/profil", label: t.dashboard.profile, icon: "UserCircle" },
   ];
 

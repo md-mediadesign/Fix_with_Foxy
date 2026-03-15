@@ -17,7 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import {
   Menu, LogOut, LayoutDashboard, Briefcase, PlusCircle, UserCircle,
   Search, FileText, Star, User, CreditCard, Shield, Users, FolderOpen,
-  Tags, ScrollText, ClipboardList,
+  Tags, ScrollText, ClipboardList, Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "@/components/locale-provider";
@@ -26,7 +26,7 @@ import type { NavigationItem } from "@/components/layout/dashboard-shell";
 const ICON_MAP: Record<string, React.ElementType> = {
   LayoutDashboard, Briefcase, PlusCircle, UserCircle, Search, FileText,
   Star, User, CreditCard, Shield, Users, FolderOpen, Tags, ScrollText,
-  ClipboardList, LogOut,
+  ClipboardList, LogOut, Globe,
 };
 
 interface MobileSidebarProps {

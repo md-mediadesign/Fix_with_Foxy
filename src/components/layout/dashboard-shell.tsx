@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import {
   Wrench, LogOut, LayoutDashboard, Briefcase, PlusCircle, UserCircle,
   Search, FileText, Star, User, CreditCard, Shield, Users, FolderOpen,
-  Tags, ScrollText, ClipboardList,
+  Tags, ScrollText, ClipboardList, Globe,
 } from "lucide-react";
 import { MobileSidebar } from "@/components/layout/mobile-sidebar";
 import { getServerTranslations } from "@/lib/i18n/server";
@@ -16,7 +16,7 @@ import { getServerTranslations } from "@/lib/i18n/server";
 const ICON_MAP: Record<string, React.ElementType> = {
   LayoutDashboard, Briefcase, PlusCircle, UserCircle, Search, FileText,
   Star, User, CreditCard, Shield, Users, FolderOpen, Tags, ScrollText,
-  ClipboardList, LogOut, Wrench,
+  ClipboardList, LogOut, Wrench, Globe,
 };
 
 export interface NavigationItem {
