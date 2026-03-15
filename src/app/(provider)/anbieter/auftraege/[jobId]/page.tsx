@@ -21,10 +21,12 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
+  MessageSquare,
 } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 import { de } from "date-fns/locale";
 import { PlaceBidForm, ProviderJobActions } from "./provider-actions";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { getServerTranslations } from "@/lib/i18n/server";
 
@@ -230,6 +232,23 @@ export default async function ProviderJobDetailPage({
         </Card>
       )}
 
+      {/* Chat access when bid exists */}
+      {existingBid && (
+        <div className="flex justify-end">
+          <Button asChild variant="outline">
+            <Link href={`/anbieter/auftraege/${job.id}/nachrichten`}>
+              <MessageSquare className="mr-2 h-4 w-4" />
+              {t.jobs.messages}
+              {job._count.messages > 0 && (
+                <span className="ml-2 rounded-full bg-primary px-1.5 py-0.5 text-xs text-primary-foreground">
+                  {job._count.messages}
+                </span>
+              )}
+            </Link>
+          </Button>
+        </div>
+      )}
+
       {/* Existing bid status */}
       {existingBid && (
         <Card>
@@ -280,7 +299,11 @@ export default async function ProviderJobDetailPage({
                   : t.jobs.statusInProgress}
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
+              <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-sm space-y-1">
+                <p className="font-medium text-green-800">📍 Projektadresse</p>
+                <p className="text-green-700">{job.city}, {job.zipCode}</p>
+              </div>
               <ProviderJobActions
                 jobId={job.id}
                 jobStatus={job.status}

@@ -66,7 +66,7 @@ export async function placeBid(data: CreateBidInput) {
     },
   });
 
-  // Create notification for client
+  // Create notification for client + auto-open chat
   const jobWithClient = await db.job.findUnique({
     where: { id: validated.jobId },
     include: { client: true },
@@ -79,7 +79,16 @@ export async function placeBid(data: CreateBidInput) {
         type: "NEW_BID",
         title: "Neues Angebot erhalten",
         body: `${session.user.name} hat ein Angebot für "${jobWithClient.title}" abgegeben.`,
-        link: `/dashboard/auftraege/${validated.jobId}/angebote`,
+        link: `/dashboard/auftraege/${validated.jobId}/nachrichten`,
+      },
+    });
+
+    // Auto-create first message to open chat channel
+    await db.message.create({
+      data: {
+        jobId: validated.jobId,
+        senderId: session.user.id,
+        content: `📋 Angebot eingereicht: ${validated.amount.toFixed(2)} €${validated.estimatedDays ? ` | ca. ${validated.estimatedDays} Tage` : ""}\n\n${validated.message}`,
       },
     });
   }

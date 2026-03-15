@@ -12,6 +12,16 @@ export async function sendMessage(jobId: string, content: string) {
     return { error: "Nachricht ist ungültig." };
   }
 
+  // Block contact information sharing
+  const contactPatterns = [
+    /\b\d[\d\s\-\(\)\/]{7,}\d\b/, // phone numbers
+    /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/, // email
+    /\b(www\.|https?:\/\/)[^\s]+/i, // URLs
+  ];
+  if (contactPatterns.some((p) => p.test(content))) {
+    return { error: "Das Teilen von Telefonnummern, E-Mail-Adressen oder Links ist im Chat nicht erlaubt." };
+  }
+
   // Verify user is involved in this job
   const job = await db.job.findUnique({
     where: { id: jobId },
@@ -51,12 +61,15 @@ export async function sendMessage(jobId: string, content: string) {
         type: "MESSAGE_RECEIVED",
         title: "Neue Nachricht",
         body: `${session.user.name}: ${content.slice(0, 100)}${content.length > 100 ? "..." : ""}`,
-        link: `/dashboard/auftraege/${jobId}/nachrichten`,
+        link: isClient
+          ? `/anbieter/auftraege/${jobId}/nachrichten`
+          : `/dashboard/auftraege/${jobId}/nachrichten`,
       },
     });
   }
 
   revalidatePath(`/dashboard/auftraege/${jobId}/nachrichten`);
+  revalidatePath(`/anbieter/auftraege/${jobId}/nachrichten`);
   return { success: true, message };
 }
 
