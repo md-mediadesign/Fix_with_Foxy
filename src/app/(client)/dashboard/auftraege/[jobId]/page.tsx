@@ -277,7 +277,14 @@ export default async function ClientJobDetailPage({
                           locale: de,
                         })}
                       </span>
-                      <AwardBidButton jobId={job.id} bidId={bid.id} />
+                      <div className="flex items-center gap-2">
+                        <Button variant="outline" size="sm" asChild>
+                          <Link href={`/handwerker/${bid.provider.id}`} target="_blank">
+                            {t.jobs.viewProfile}
+                          </Link>
+                        </Button>
+                        <AwardBidButton jobId={job.id} bidId={bid.id} />
+                      </div>
                     </div>
                   </div>
                 ))}

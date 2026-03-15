@@ -328,6 +328,7 @@ export const de = {
     // Job detail
     bidCount: "Angebote",
     noBids: "Noch keine Angebote erhalten.",
+    viewProfile: "Profil ansehen",
     awardBid: "Zuschlag erteilen",
     awardConfirm: "Möchten Sie diesem Anbieter wirklich den Zuschlag erteilen?",
     markCompleted: "Als abgeschlossen markieren",

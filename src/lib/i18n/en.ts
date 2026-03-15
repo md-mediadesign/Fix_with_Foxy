@@ -321,6 +321,7 @@ export const en = {
     publishError: "Could not create job.",
     bidCount: "Quotes",
     noBids: "No quotes received yet.",
+    viewProfile: "View profile",
     awardBid: "Award job",
     awardConfirm: "Are you sure you want to award this provider?",
     markCompleted: "Mark as completed",
