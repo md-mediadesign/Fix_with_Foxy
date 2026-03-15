@@ -72,9 +72,12 @@ export default async function ProviderDashboardPage() {
   const subscription = providerProfile.subscription;
   const categoryIds = providerProfile.categories.map((pc) => pc.categoryId);
 
-  const [totalBids, completedJobs, recentAvailableJobs] = await Promise.all([
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  const [monthlyBids, completedJobs, recentAvailableJobs] = await Promise.all([
     db.bid.count({
-      where: { providerId: providerProfile.id },
+      where: { providerId: providerProfile.id, createdAt: { gte: startOfMonth } },
     }),
     db.job.count({
       where: {
@@ -120,7 +123,7 @@ export default async function ProviderDashboardPage() {
     },
     {
       label: t.provider.totalBids,
-      value: totalBids,
+      value: `${monthlyBids} / ${awardsLimit === 999999 ? "∞" : awardsLimit}`,
       icon: FileText,
       color: "text-amber-600",
     },
