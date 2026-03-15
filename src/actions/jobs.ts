@@ -7,7 +7,7 @@ import { PREMIUM_WINDOW_HOURS, JOB_EXPIRY_DAYS } from "@/lib/constants";
 import { addHours, addDays } from "date-fns";
 import { revalidatePath } from "next/cache";
 
-export async function createJob(data: CreateJobInput) {
+export async function createJob(data: CreateJobInput, imageUrls: string[] = []) {
   const session = await auth();
   if (!session || session.user.role !== "CLIENT") {
     return { error: "Nicht autorisiert." };
@@ -36,6 +36,9 @@ export async function createJob(data: CreateJobInput) {
       desiredDate: validated.desiredDate ? new Date(validated.desiredDate) : null,
       urgency: validated.urgency || null,
       status: "DRAFT",
+      images: imageUrls.length > 0 ? {
+        create: imageUrls.map((url, i) => ({ url, sortOrder: i })),
+      } : undefined,
     },
   });
 

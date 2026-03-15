@@ -332,6 +332,8 @@ export const de = {
     bidCount: "Angebote",
     noBids: "Noch keine Angebote erhalten.",
     viewProfile: "Profil ansehen",
+    projectImages: "Projektbilder (optional)",
+    projectImagesHint: "Bis zu 5 Bilder, max. 5 MB pro Bild.",
     awardBid: "Zuschlag erteilen",
     awardConfirm: "Möchten Sie diesem Anbieter wirklich den Zuschlag erteilen?",
     markCompleted: "Als abgeschlossen markieren",

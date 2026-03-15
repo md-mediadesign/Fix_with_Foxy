@@ -34,11 +34,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Image from "next/image";
 import {
   ArrowLeft,
   ArrowRight,
   Check,
   Loader2,
+  ImagePlus,
+  X,
   Zap,
   Droplets,
   Paintbrush,
@@ -83,6 +86,8 @@ export default function NewJobPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [isPending, startTransition] = useTransition();
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [uploadingImages, setUploadingImages] = useState(false);
 
   const urgencyLabels: Record<string, string> = {
     low: t.jobs.urgencyLow,
@@ -138,7 +143,7 @@ export default function NewJobPage() {
   function onSubmit(data: CreateJobInput) {
     startTransition(async () => {
       try {
-        const result = await createJob(data);
+        const result = await createJob(data, imageUrls);
 
         if (result.error) {
           toast.error(result.error);
@@ -337,6 +342,58 @@ export default function NewJobPage() {
                     )}
                   </div>
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>{t.jobs.projectImages}</Label>
+                <div className="flex flex-wrap gap-2">
+                  {imageUrls.map((url, i) => (
+                    <div key={url} className="relative h-20 w-20">
+                      <Image
+                        src={url}
+                        alt={`Bild ${i + 1}`}
+                        fill
+                        className="rounded-lg border object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setImageUrls((prev) => prev.filter((u) => u !== url))}
+                        className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-white"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                  {imageUrls.length < 5 && (
+                    <label className="flex h-20 w-20 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed text-muted-foreground hover:bg-muted/50">
+                      {uploadingImages ? (
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                      ) : (
+                        <ImagePlus className="h-5 w-5" />
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="sr-only"
+                        disabled={uploadingImages}
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          setUploadingImages(true);
+                          const fd = new FormData();
+                          fd.append("file", file);
+                          const res = await fetch("/api/upload", { method: "POST", body: fd });
+                          const json = await res.json();
+                          if (json.url) setImageUrls((prev) => [...prev, json.url]);
+                          else toast.error(json.error ?? "Upload fehlgeschlagen.");
+                          setUploadingImages(false);
+                          e.target.value = "";
+                        }}
+                      />
+                    </label>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground">{t.jobs.projectImagesHint}</p>
               </div>
 
               <Separator />

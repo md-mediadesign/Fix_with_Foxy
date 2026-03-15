@@ -325,6 +325,8 @@ export const en = {
     bidCount: "Quotes",
     noBids: "No quotes received yet.",
     viewProfile: "View profile",
+    projectImages: "Project images (optional)",
+    projectImagesHint: "Up to 5 images, max. 5 MB each.",
     awardBid: "Award job",
     awardConfirm: "Are you sure you want to award this provider?",
     markCompleted: "Mark as completed",

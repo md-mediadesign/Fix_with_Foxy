@@ -11,6 +11,7 @@ import {
   Tags, ScrollText, ClipboardList, Globe,
 } from "lucide-react";
 import { MobileSidebar } from "@/components/layout/mobile-sidebar";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { getServerTranslations } from "@/lib/i18n/server";
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -134,6 +135,7 @@ export async function DashboardShell({
             <h1 className="text-lg font-semibold">{title}</h1>
           </div>
           <div className="hidden items-center gap-3 md:flex">
+            <LanguageSwitcher />
             <span className="text-sm text-muted-foreground">{user.name}</span>
             <Avatar className="h-8 w-8">
               {user.image && <AvatarImage src={user.image} alt={user.name ?? ""} />}

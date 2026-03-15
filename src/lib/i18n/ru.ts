@@ -325,6 +325,8 @@ export const ru = {
     bidCount: "Предложения",
     noBids: "Предложений пока нет.",
     viewProfile: "Посмотреть профиль",
+    projectImages: "Фото проекта (необязательно)",
+    projectImagesHint: "До 5 изображений, макс. 5 МБ каждое.",
     awardBid: "Назначить",
     awardConfirm: "Вы действительно хотите назначить этого исполнителя?",
     markCompleted: "Отметить как завершённый",
