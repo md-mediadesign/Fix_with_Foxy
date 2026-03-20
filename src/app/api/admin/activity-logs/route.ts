@@ -9,9 +9,17 @@ export async function GET(req: NextRequest) {
   }
 
   const { searchParams } = new URL(req.url);
-  const limit = Math.min(Number(searchParams.get("limit") ?? "100"), 500);
+  const limit = Math.min(Number(searchParams.get("limit") ?? "500"), 1000);
+  const from = searchParams.get("from");
+  const to = searchParams.get("to");
 
   const logs = await db.userActivityLog.findMany({
+    where: {
+      createdAt: {
+        ...(from ? { gte: new Date(from) } : {}),
+        ...(to ? { lte: new Date(to) } : {}),
+      },
+    },
     orderBy: { createdAt: "desc" },
     take: limit,
     include: {

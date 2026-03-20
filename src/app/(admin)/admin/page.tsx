@@ -12,7 +12,9 @@ import { PLAN_LIMITS } from "@/lib/constants";
 import type { Metadata } from "next";
 import { getServerTranslations } from "@/lib/i18n/server";
 import { WhatsAppTestSection } from "./whatsapp-test-section";
-import { ActivityLogDialog } from "@/components/admin/activity-log-dialog";
+import Link from "next/link";
+import { ScrollText } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Admin-\u00dcbersicht",
@@ -146,7 +148,12 @@ export default async function AdminOverviewPage() {
             {t.admin.overviewSubtitle}
           </p>
         </div>
-        <ActivityLogDialog />
+        <Button asChild variant="outline" className="gap-2">
+          <Link href="/admin/aktivitaetslog" target="_blank">
+            <ScrollText className="h-4 w-4" />
+            Aktivitätslog
+          </Link>
+        </Button>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
