@@ -3,6 +3,7 @@
 import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
+import { logActivity } from "@/lib/activity-log";
 
 export async function sendMessage(jobId: string, content: string) {
   const session = await auth();
@@ -67,6 +68,11 @@ export async function sendMessage(jobId: string, content: string) {
       },
     });
   }
+
+  await logActivity(session.user.id, "MESSAGE_SENT", {
+    jobId,
+    recipientId: recipientUserId ?? null,
+  });
 
   revalidatePath(`/dashboard/auftraege/${jobId}/nachrichten`);
   revalidatePath(`/anbieter/auftraege/${jobId}/nachrichten`);

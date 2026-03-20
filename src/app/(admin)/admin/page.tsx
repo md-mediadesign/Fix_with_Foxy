@@ -12,6 +12,7 @@ import { PLAN_LIMITS } from "@/lib/constants";
 import type { Metadata } from "next";
 import { getServerTranslations } from "@/lib/i18n/server";
 import { WhatsAppTestSection } from "./whatsapp-test-section";
+import { ActivityLogDialog } from "@/components/admin/activity-log-dialog";
 
 export const metadata: Metadata = {
   title: "Admin-\u00dcbersicht",
@@ -136,13 +137,16 @@ export default async function AdminOverviewPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">
-          {t.admin.title}
-        </h2>
-        <p className="text-muted-foreground">
-          {t.admin.overviewSubtitle}
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">
+            {t.admin.title}
+          </h2>
+          <p className="text-muted-foreground">
+            {t.admin.overviewSubtitle}
+          </p>
+        </div>
+        <ActivityLogDialog />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

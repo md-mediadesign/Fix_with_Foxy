@@ -12,6 +12,7 @@ import {
 } from "@/lib/validations/auth";
 import { TRIAL_DAYS, PLAN_LIMITS } from "@/lib/constants";
 import { addDays } from "date-fns";
+import { logActivity } from "@/lib/activity-log";
 
 export async function registerClient(data: RegisterClientInput) {
   const validated = registerClientSchema.parse(data);
@@ -26,7 +27,7 @@ export async function registerClient(data: RegisterClientInput) {
 
   const passwordHash = await bcrypt.hash(validated.password, 12);
 
-  await db.user.create({
+  const user = await db.user.create({
     data: {
       email: validated.email,
       name: validated.name,
@@ -39,6 +40,8 @@ export async function registerClient(data: RegisterClientInput) {
       },
     },
   });
+
+  await logActivity(user.id, "REGISTER", { role: "CLIENT" });
 
   return { success: true };
 }
@@ -58,7 +61,7 @@ export async function registerProvider(data: RegisterProviderInput) {
   const now = new Date();
   const trialEnd = addDays(now, TRIAL_DAYS);
 
-  await db.user.create({
+  const providerUser = await db.user.create({
     data: {
       email: validated.email,
       name: validated.name,
@@ -92,20 +95,21 @@ export async function registerProvider(data: RegisterProviderInput) {
     },
   });
 
+  await logActivity(providerUser.id, "REGISTER", { role: "PROVIDER" });
+
   return { success: true };
 }
 
 export async function loginAction(email: string, password: string) {
   const user = await db.user.findUnique({
     where: { email },
-    select: { role: true, passwordHash: true, isActive: true },
+    select: { id: true, role: true, passwordHash: true, isActive: true },
   });
 
   if (!user || !user.passwordHash || !user.isActive) {
     return { error: "Ungültige E-Mail oder Passwort." };
   }
 
-  const bcrypt = await import("bcryptjs");
   const isValid = await bcrypt.compare(password, user.passwordHash);
   if (!isValid) {
     return { error: "Ungültige E-Mail oder Passwort." };
@@ -126,4 +130,6 @@ export async function loginAction(email: string, password: string) {
     }
     throw error; // Re-throw NEXT_REDIRECT so Next.js handles navigation
   }
+
+  await logActivity(user.id, "LOGIN");
 }

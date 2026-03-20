@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { createReviewSchema, type CreateReviewInput } from "@/lib/validations/job";
 import { revalidatePath } from "next/cache";
+import { logActivity } from "@/lib/activity-log";
 
 export async function createReview(data: CreateReviewInput) {
   const session = await auth();
@@ -108,6 +109,12 @@ export async function createReview(data: CreateReviewInput) {
       console.error("[createReview] Benachrichtigung fehlgeschlagen:", err);
     }
   }
+
+  await logActivity(session.user.id, "REVIEW_CREATED", {
+    jobId: validated.jobId,
+    rating: validated.rating,
+    reviewId: review.id,
+  });
 
   revalidatePath(`/dashboard/auftraege/${validated.jobId}`);
   return { success: true, reviewId: review.id };

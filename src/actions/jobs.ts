@@ -6,6 +6,7 @@ import { createJobSchema, type CreateJobInput } from "@/lib/validations/job";
 import { PREMIUM_WINDOW_HOURS, JOB_EXPIRY_DAYS } from "@/lib/constants";
 import { addHours, addDays } from "date-fns";
 import { revalidatePath } from "next/cache";
+import { logActivity } from "@/lib/activity-log";
 
 export async function createJob(data: CreateJobInput, imageUrls: string[] = []) {
   const session = await auth();
@@ -81,6 +82,8 @@ export async function publishJob(jobId: string) {
 
   // TODO: Trigger notifications for premium providers (WhatsApp)
   // TODO: Schedule notification for non-premium providers after window
+
+  await logActivity(session.user.id, "JOB_PUBLISHED", { jobId });
 
   revalidatePath("/dashboard/auftraege");
   return { success: true };
@@ -288,6 +291,12 @@ export async function awardBid(jobId: string, bidId: string) {
   } catch (err) {
     console.error("[awardBid] Benachrichtigung fehlgeschlagen:", err);
   }
+
+  await logActivity(session.user.id, "BID_AWARDED", {
+    jobId,
+    bidId,
+    providerId: bid.provider.userId,
+  });
 
   revalidatePath(`/dashboard/auftraege/${jobId}`);
   return { success: true };

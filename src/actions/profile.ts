@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
+import { logActivity } from "@/lib/activity-log";
 
 export async function updateProviderProfile(data: {
   companyName?: string;
@@ -50,6 +51,8 @@ export async function updateProviderProfile(data: {
     });
   }
 
+  await logActivity(session.user.id, "PROFILE_UPDATE", { role: "PROVIDER" });
+
   revalidatePath("/anbieter/profil");
   return { success: true };
 }
@@ -84,6 +87,8 @@ export async function updateClientProfile(data: {
       },
     });
   }
+
+  await logActivity(session.user.id, "PROFILE_UPDATE", { role: "CLIENT" });
 
   revalidatePath("/dashboard/profil");
   return { success: true };
@@ -121,6 +126,8 @@ export async function changePassword(data: {
     where: { id: session.user.id },
     data: { passwordHash, mustChangePassword: false },
   });
+
+  await logActivity(session.user.id, "PASSWORD_CHANGE");
 
   return { success: true };
 }

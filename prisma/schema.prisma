@@ -89,6 +89,7 @@ model User {
   sentMessages    Message[]       @relation("SentMessages")
   notifications   Notification[]
   adminActions    AdminAction[]
+  activityLogs    UserActivityLog[]
 
   @@index([email])
   @@index([role])
@@ -390,6 +391,24 @@ model Notification {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, isRead])
+  @@index([createdAt])
+}
+
+// ============================================================
+// ACTIVITY LOG
+// ============================================================
+
+model UserActivityLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String
+  meta      Json?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([action])
   @@index([createdAt])
 }
 
