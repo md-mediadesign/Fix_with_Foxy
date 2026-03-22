@@ -21,12 +21,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import { useTranslations } from "@/components/locale-provider";
 
 export default function KundeRegistrierenPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const t = useTranslations();
 
   const {
@@ -99,14 +100,25 @@ export default function KundeRegistrierenPage() {
 
           <div className="space-y-2">
             <Label htmlFor="password">{t.auth.password}</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder={t.auth.passwordMinHint}
-              autoComplete="new-password"
-              disabled={isLoading}
-              {...register("password")}
-            />
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder={t.auth.passwordMinHint}
+                autoComplete="new-password"
+                disabled={isLoading}
+                className="pr-10"
+                {...register("password")}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
             {errors.password && (
               <p className="text-sm text-destructive">
                 {errors.password.message}

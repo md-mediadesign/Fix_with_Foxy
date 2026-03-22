@@ -95,16 +95,28 @@ export async function registerProvider(data: RegisterProviderInput) {
       providerProfile: {
         create: {
           companyName: validated.companyName || null,
-          phone: validated.phone ?? null,
+          phone: validated.phone,
+          whatsappPhone: validated.whatsappPhone || null,
+          taxNumber: validated.taxNumber || null,
           city: validated.city,
           zipCode: validated.zipCode ?? null,
           description: validated.description || null,
           serviceRadius: validated.serviceRadius,
+          services: validated.services ?? [],
+          qualifications: validated.qualifications ?? [],
           categories: {
             create: validated.categoryIds.map((categoryId) => ({
               categoryId,
             })),
           },
+          portfolioImages: validated.portfolioImageUrls?.length
+            ? {
+                create: validated.portfolioImageUrls.map((url, i) => ({
+                  url,
+                  sortOrder: i,
+                })),
+              }
+            : undefined,
           subscription: {
             create: {
               tier: "BASIC",

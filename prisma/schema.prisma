@@ -162,6 +162,9 @@ model ProviderProfile {
   city          String
   zipCode       String?
   serviceRadius Int      @default(25)
+  taxNumber      String?
+  services       String[]
+  qualifications String[]
   isVerified    Boolean  @default(false)
   averageRating Float    @default(0)
   totalReviews  Int      @default(0)
