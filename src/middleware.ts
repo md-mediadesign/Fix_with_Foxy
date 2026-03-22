@@ -12,6 +12,8 @@ const publicPaths = [
   "/datenschutz",
   "/agb",
   "/handwerker",
+  "/passwort-vergessen",
+  "/passwort-zuruecksetzen",
 ];
 
 function isPublicPath(pathname: string) {

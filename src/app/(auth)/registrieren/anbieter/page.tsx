@@ -31,6 +31,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import { useTranslations } from "@/components/locale-provider";
 
@@ -41,12 +42,15 @@ type Category = {
   icon: string | null;
 };
 
+const SERVICE_RADIUS_OPTIONS = [5, 10, 20, 25, 30, 50, 100];
+
 export default function AnbieterRegistrierenPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [customRadius, setCustomRadius] = useState(false);
   const t = useTranslations();
 
   const {
@@ -306,16 +310,41 @@ export default function AnbieterRegistrierenPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="serviceRadius">{t.auth.serviceRadius}</Label>
-                <Input
-                  id="serviceRadius"
-                  type="number"
-                  min={1}
-                  max={200}
-                  placeholder="25"
+                <Label>{t.auth.serviceRadius}</Label>
+                <Select
                   disabled={isLoading}
-                  {...register("serviceRadius", { valueAsNumber: true })}
-                />
+                  defaultValue="25"
+                  onValueChange={(val) => {
+                    if (val === "custom") {
+                      setCustomRadius(true);
+                    } else {
+                      setCustomRadius(false);
+                      setValue("serviceRadius", Number(val), { shouldValidate: true });
+                    }
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Einsatzradius wählen" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SERVICE_RADIUS_OPTIONS.map((r) => (
+                      <SelectItem key={r} value={String(r)}>
+                        {r} km
+                      </SelectItem>
+                    ))}
+                    <SelectItem value="custom">Individuell</SelectItem>
+                  </SelectContent>
+                </Select>
+                {customRadius && (
+                  <Input
+                    type="number"
+                    min={1}
+                    max={200}
+                    placeholder="Radius in km"
+                    disabled={isLoading}
+                    {...register("serviceRadius", { valueAsNumber: true })}
+                  />
+                )}
                 {errors.serviceRadius && (
                   <p className="text-sm text-destructive">
                     {errors.serviceRadius.message}

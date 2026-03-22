@@ -16,7 +16,12 @@ import { logActivity } from "@/lib/activity-log";
 import { sendWelcomeEmail } from "@/lib/email";
 
 export async function registerClient(data: RegisterClientInput) {
-  const validated = registerClientSchema.parse(data);
+  let validated: RegisterClientInput;
+  try {
+    validated = registerClientSchema.parse(data);
+  } catch {
+    return { error: "Bitte überprüfe deine Eingaben." };
+  }
 
   const existing = await db.user.findUnique({
     where: { email: validated.email },
@@ -45,11 +50,29 @@ export async function registerClient(data: RegisterClientInput) {
   await logActivity(user.id, "REGISTER", { role: "CLIENT" });
   sendWelcomeEmail(user.email, user.name, "CLIENT").catch(() => {});
 
+  try {
+    await signIn("credentials", {
+      email: validated.email,
+      password: validated.password,
+      redirectTo: "/dashboard",
+    });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return { success: true };
+    }
+    throw error;
+  }
+
   return { success: true };
 }
 
 export async function registerProvider(data: RegisterProviderInput) {
-  const validated = registerProviderSchema.parse(data);
+  let validated: RegisterProviderInput;
+  try {
+    validated = registerProviderSchema.parse(data);
+  } catch {
+    return { error: "Bitte überprüfe deine Eingaben." };
+  }
 
   const existing = await db.user.findUnique({
     where: { email: validated.email },
@@ -99,6 +122,19 @@ export async function registerProvider(data: RegisterProviderInput) {
 
   await logActivity(providerUser.id, "REGISTER", { role: "PROVIDER" });
   sendWelcomeEmail(providerUser.email, providerUser.name, "PROVIDER").catch(() => {});
+
+  try {
+    await signIn("credentials", {
+      email: validated.email,
+      password: validated.password,
+      redirectTo: "/anbieter/dashboard",
+    });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return { success: true };
+    }
+    throw error;
+  }
 
   return { success: true };
 }
