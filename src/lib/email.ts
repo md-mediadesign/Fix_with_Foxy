@@ -43,23 +43,93 @@ export async function sendPasswordResetEmail(to: string, name: string, token: st
 
 export async function sendWelcomeEmail(to: string, name: string, role: "CLIENT" | "PROVIDER") {
   const isProvider = role === "PROVIDER";
+  const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL}/${isProvider ? "anbieter/auftraege" : "dashboard"}`;
+
   await sendMail(
     to,
-    "Willkommen bei Fix with Foxy!",
+    "Willkommen bei FixWithFoxy 🦊",
     `
-      <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
-        <h2 style="color:#f97316">Willkommen, ${name}!</h2>
-        <p>Schön, dass du dabei bist. Dein Konto bei <strong>Fix with Foxy</strong> wurde erfolgreich erstellt.</p>
-        ${isProvider
-          ? `<p>Als <strong>Dienstleister</strong> kannst du jetzt auf Aufträge in deiner Region bieten und neue Kunden gewinnen. Du startest mit einem kostenlosen 30-Tage-Test.</p>`
-          : `<p>Als <strong>Auftraggeber</strong> kannst du jetzt kostenlos Aufträge erstellen und Angebote von geprüften Handwerkern erhalten.</p>`
-        }
-        <a href="${process.env.NEXT_PUBLIC_APP_URL}/${isProvider ? "anbieter/dashboard" : "dashboard"}"
-           style="display:inline-block;background:#f97316;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;margin-top:16px">
-          Zum Dashboard
-        </a>
-        <p style="margin-top:24px;color:#6b7280;font-size:12px">Fix with Foxy · auftrag@fixwithfoxy.com</p>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body style="margin:0;padding:0;background:#f9fafb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+  <div style="max-width:600px;margin:32px auto;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+
+    <!-- Header -->
+    <div style="background:#f97316;padding:32px 40px;text-align:center">
+      <p style="margin:0;font-size:36px">🦊</p>
+      <h1 style="margin:8px 0 0;color:#ffffff;font-size:24px;font-weight:700">FixWithFoxy</h1>
+    </div>
+
+    <!-- Body -->
+    <div style="padding:36px 40px">
+      <p style="margin:0 0 16px;font-size:16px;color:#111827">Hallo ${name},</p>
+      <p style="margin:0 0 16px;font-size:16px;color:#374151;line-height:1.6">
+        herzlich willkommen bei <strong>FixWithFoxy</strong> – schön, dass du dabei bist!
+      </p>
+      <p style="margin:0 0 24px;font-size:16px;color:#374151;line-height:1.6">
+        Deine Registrierung war erfolgreich und du kannst ab sofort alle Funktionen der Plattform nutzen.
+      </p>
+
+      <!-- Beta info box -->
+      <div style="background:#fff7ed;border-left:4px solid #f97316;border-radius:4px;padding:16px 20px;margin-bottom:28px">
+        <p style="margin:0;font-size:15px;color:#374151;line-height:1.6">
+          Als Teil unserer aktuellen <strong>Beta-Phase</strong> kannst du dich komplett kostenlos anmelden und die Plattform testen.
+          Nach dem offiziellen Start erhältst du zusätzlich <strong>30 Tage kostenlosen Zugriff</strong>, um alles in Ruhe auszuprobieren.
+        </p>
       </div>
+
+      <!-- Plans -->
+      <p style="margin:0 0 16px;font-size:16px;font-weight:600;color:#111827">Unsere Modelle im Überblick:</p>
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px">
+        <tr>
+          <td style="padding:0 6px 12px 0;width:33%">
+            <div style="background:#f3f4f6;border-radius:10px;padding:16px;text-align:center">
+              <p style="margin:0 0 6px;font-size:15px;font-weight:700;color:#111827">Basic</p>
+              <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.5">Einstieg in die Plattform · Begrenzte Anfragen pro Monat</p>
+            </div>
+          </td>
+          <td style="padding:0 6px 12px;width:33%">
+            <div style="background:#fff7ed;border:1px solid #f97316;border-radius:10px;padding:16px;text-align:center">
+              <p style="margin:0 0 6px;font-size:15px;font-weight:700;color:#f97316">Pro</p>
+              <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.5">Mehr Anfragen &amp; bessere Sichtbarkeit · Ideal für aktive Dienstleister</p>
+            </div>
+          </td>
+          <td style="padding:0 0 12px 6px;width:33%">
+            <div style="background:#f3f4f6;border-radius:10px;padding:16px;text-align:center">
+              <p style="margin:0 0 6px;font-size:15px;font-weight:700;color:#111827">Premium</p>
+              <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.5">Maximale Reichweite · Priorisierte Platzierung</p>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <!-- CTA -->
+      <div style="text-align:center;margin-bottom:28px">
+        <a href="${dashboardUrl}"
+           style="display:inline-block;background:#f97316;color:#ffffff;padding:14px 32px;border-radius:50px;text-decoration:none;font-size:16px;font-weight:600">
+          ${isProvider ? "Aufträge entdecken" : "Zum Dashboard"}
+        </a>
+      </div>
+
+      <p style="margin:0;font-size:15px;color:#374151;line-height:1.6">
+        Wir freuen uns, dich auf der Plattform zu haben und wünschen dir viel Erfolg!
+      </p>
+      <p style="margin:16px 0 0;font-size:15px;color:#374151">
+        Dein FixWithFoxy Team 🦊
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div style="background:#f3f4f6;padding:20px 40px;text-align:center">
+      <p style="margin:0;font-size:12px;color:#9ca3af">FixWithFoxy · auftrag@fixwithfoxy.com</p>
+    </div>
+  </div>
+</body>
+</html>
     `
   );
 }
