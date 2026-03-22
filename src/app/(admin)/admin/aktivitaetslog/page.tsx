@@ -21,7 +21,7 @@ type LogEntry = {
   };
 };
 
-type Range = "today" | "week" | "custom";
+type Range = "all" | "today" | "week" | "custom";
 
 const ACTION_LABELS: Record<string, string> = {
   REGISTER: "Registrierung",
@@ -46,7 +46,7 @@ const ACTION_COLORS: Record<string, "default" | "secondary" | "destructive" | "o
 };
 
 export default function AktivitaetslogPage() {
-  const [range, setRange] = useState<Range>("today");
+  const [range, setRange] = useState<Range>("all");
   const [customFrom, setCustomFrom] = useState("");
   const [customTo, setCustomTo] = useState("");
   const [logs, setLogs] = useState<LogEntry[]>([]);
@@ -58,7 +58,9 @@ export default function AktivitaetslogPage() {
 
     const now = new Date();
 
-    if (range === "today") {
+    if (range === "all") {
+      // no date filter
+    } else if (range === "today") {
       from = startOfDay(now).toISOString();
       to = endOfDay(now).toISOString();
     } else if (range === "week") {
@@ -113,6 +115,13 @@ export default function AktivitaetslogPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap gap-2">
+            <Button
+              variant={range === "all" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setRange("all")}
+            >
+              Alle
+            </Button>
             <Button
               variant={range === "today" ? "default" : "outline"}
               size="sm"
