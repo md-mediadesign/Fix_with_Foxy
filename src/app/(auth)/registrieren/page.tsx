@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -34,7 +34,7 @@ const CATEGORY_IMAGES: Record<string, string> = {
 };
 
 
-export default function RegistrierenPage() {
+function RegistrierenInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialTab = searchParams.get("tab") === "handwerker" ? "handwerker" : "auftraggeber";
@@ -265,5 +265,13 @@ export default function RegistrierenPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function RegistrierenPage() {
+  return (
+    <Suspense>
+      <RegistrierenInner />
+    </Suspense>
   );
 }
