@@ -1,28 +1,54 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import {
   registerClientSchema,
+  registerProviderSchema,
   type RegisterClientInput,
+  type RegisterProviderInput,
 } from "@/lib/validations/auth";
 import { signIn } from "next-auth/react";
-import { registerClient } from "@/actions/auth";
+import { registerClient, registerProvider } from "@/actions/auth";
+import { getCategories } from "@/actions/categories";
 import { useTranslations } from "@/components/locale-provider";
 
+type Category = { id: string; name: string; slug: string; icon: string | null };
+
+const CATEGORY_IMAGES: Record<string, string> = {
+  reinigung: "/categories/cleaner.png",
+  "garten-landschaft": "/categories/gaertner.png",
+  "malerei-lackierung": "/categories/maler.png",
+  "montage-aufbau": "/categories/montage.jpg",
+  elektrik: "/categories/elektrik.png",
+  "sanitaer-heizung": "/categories/sanitaer.png",
+  "dach-fassade": "/categories/dach.png",
+  schluesseldienst: "/categories/schluesseldienst.png",
+  "umzug-transport": "/categories/umzug.png",
+};
+
+
 function RegistrierenInner() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const initialTab = searchParams.get("tab") === "handwerker" ? "handwerker" : "auftraggeber";
   const [activeTab, setActiveTab] = useState<"auftraggeber" | "handwerker">(initialTab);
   const [isLoading, setIsLoading] = useState(false);
   const [showPasswordClient, setShowPasswordClient] = useState(false);
+  const [showPasswordProvider, setShowPasswordProvider] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const t = useTranslations();
+
+  useEffect(() => {
+    getCategories().then(setCategories).catch(() => {});
+  }, []);
 
   const {
     register: registerC,
@@ -30,12 +56,43 @@ function RegistrierenInner() {
     formState: { errors: errorsC },
   } = useForm<RegisterClientInput>({ resolver: zodResolver(registerClientSchema) });
 
+  const {
+    register: registerP,
+    handleSubmit: handleSubmitP,
+    setValue: setValueP,
+    formState: { errors: errorsP },
+  } = useForm<RegisterProviderInput>({
+    resolver: zodResolver(registerProviderSchema),
+    defaultValues: { serviceRadius: 25, categoryIds: [], phone: "0000", zipCode: "00000" },
+  });
+
+  function toggleCategory(id: string) {
+    setSelectedCategories((prev) => {
+      const next = prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id];
+      setValueP("categoryIds", next);
+      return next;
+    });
+  }
+
   async function onSubmitClient(data: RegisterClientInput) {
     setIsLoading(true);
     try {
       const result = await registerClient(data);
       if (result.error) { toast.error(result.error); setIsLoading(false); return; }
       await signIn("credentials", { email: data.email, password: data.password, callbackUrl: "/dashboard" });
+    } catch {
+      toast.error("Ein Fehler ist aufgetreten.");
+      setIsLoading(false);
+    }
+  }
+
+  async function onSubmitProvider(data: RegisterProviderInput) {
+    if (selectedCategories.length === 0) { toast.error(t.auth.categoriesMin); return; }
+    setIsLoading(true);
+    try {
+      const result = await registerProvider({ ...data, categoryIds: selectedCategories });
+      if (result.error) { toast.error(result.error); setIsLoading(false); return; }
+      await signIn("credentials", { email: data.email, password: data.password, callbackUrl: "/anbieter/auftraege" });
     } catch {
       toast.error("Ein Fehler ist aufgetreten.");
       setIsLoading(false);
@@ -119,22 +176,86 @@ function RegistrierenInner() {
         </form>
       )}
 
-      {/* Handwerker CTA */}
+      {/* Handwerker Form */}
       {activeTab === "handwerker" && (
-        <div className="px-8 py-8 text-center space-y-5">
-          <div className="rounded-xl bg-blue-50 p-5">
-            <p className="text-sm font-semibold text-blue-900 mb-1">Detailliertes Profil in 6 Schritten</p>
-            <p className="text-sm text-gray-500">
-              Beschreibung, Portfolio-Bilder, Standort, Dienstleistungen und Qualifikationen – alles was Auftraggeber sehen wollen.
-            </p>
+        <form onSubmit={handleSubmitP(onSubmitProvider)} className="space-y-5 px-8 py-6">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className={labelCls}>{t.auth.nameOrCompany}</label>
+              <input type="text" placeholder={t.auth.namePlaceholder} autoComplete="name" disabled={isLoading} className={inputCls} {...registerP("name")} />
+              {errorsP.name && <p className={errorCls}>{errorsP.name.message}</p>}
+            </div>
+            <div>
+              <label className={labelCls}>{t.auth.email}</label>
+              <input type="email" placeholder={t.auth.emailPlaceholder} autoComplete="email" disabled={isLoading} className={inputCls} {...registerP("email")} />
+              {errorsP.email && <p className={errorCls}>{errorsP.email.message}</p>}
+            </div>
           </div>
-          <Link
-            href="/registrieren/anbieter"
-            className="block w-full rounded-full bg-blue-900 py-3.5 text-base font-semibold text-white text-center hover:bg-blue-800 transition-colors"
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className={labelCls}>{t.auth.password}</label>
+              <div className="relative">
+                <input type={showPasswordProvider ? "text" : "password"} placeholder={t.auth.passwordMinHint} autoComplete="new-password" disabled={isLoading} className={`${inputCls} pr-10`} {...registerP("password")} />
+                <button type="button" tabIndex={-1} onClick={() => setShowPasswordProvider((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700">
+                  {showPasswordProvider ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+              {errorsP.password && <p className={errorCls}>{errorsP.password.message}</p>}
+            </div>
+            <div>
+              <label className={labelCls}>{t.auth.cityArea}</label>
+              <input type="text" placeholder={t.auth.cityPlaceholder} disabled={isLoading} className={inputCls} {...registerP("city")} />
+              {errorsP.city && <p className={errorCls}>{errorsP.city.message}</p>}
+            </div>
+          </div>
+
+          {/* Category selection */}
+          <div>
+            <h3 className="mb-1 text-base font-bold text-blue-900">{t.auth.categoriesTitle}</h3>
+            <p className="mb-4 text-sm text-gray-500">{t.auth.categoriesDesc}</p>
+            {errorsP.categoryIds && (
+              <p className="mb-3 text-sm text-orange-500">{t.auth.categoriesMin}</p>
+            )}
+            <div className="grid grid-cols-3 gap-3">
+              {categories.map((cat) => {
+                const img = CATEGORY_IMAGES[cat.slug];
+                const desc = (t.categoryDescs as Record<string, string>)[cat.slug];
+                const isSelected = selectedCategories.includes(cat.id);
+                const translatedName = (t.categoryNames as Record<string, string>)[cat.slug] ?? cat.name;
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => toggleCategory(cat.id)}
+                    className={`overflow-hidden rounded-xl border-2 text-left transition-all ${
+                      isSelected ? "border-blue-500 shadow-md" : "border-gray-100 hover:border-gray-300"
+                    }`}
+                  >
+                    {img ? (
+                      <div className="relative aspect-video bg-gray-50">
+                        <Image src={img} alt={cat.name} fill className="object-contain p-1" />
+                      </div>
+                    ) : (
+                      <div className="flex aspect-video items-center justify-center bg-blue-50 text-3xl">🔧</div>
+                    )}
+                    <div className="p-2.5">
+                      <p className="text-xs font-bold text-blue-900">{translatedName}</p>
+                      {desc && <p className="mt-0.5 text-xs text-gray-400 line-clamp-2">{desc}</p>}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full rounded-full bg-blue-900 py-3.5 text-base font-semibold text-white hover:bg-blue-800 transition-colors disabled:opacity-50"
           >
-            Jetzt als Handwerker registrieren →
-          </Link>
-        </div>
+            {isLoading ? t.auth.creating : t.auth.registerProviderBtn}
+          </button>
+        </form>
       )}
 
       <div className="border-t border-gray-100 px-8 py-5 text-center text-sm text-gray-500">
