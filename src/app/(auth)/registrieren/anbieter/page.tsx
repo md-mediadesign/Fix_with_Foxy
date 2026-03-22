@@ -218,7 +218,7 @@ export default function AnbieterRegistrierenPage() {
       }
 
       toast.success(t.auth.registerSuccess);
-      router.push("/anbieter/dashboard");
+      router.push("/anbieter/auftraege");
     } catch {
       toast.error(t.auth.registerError);
       setIsLoading(false);
