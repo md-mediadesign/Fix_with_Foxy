@@ -13,6 +13,7 @@ import {
 import { TRIAL_DAYS, PLAN_LIMITS } from "@/lib/constants";
 import { addDays } from "date-fns";
 import { logActivity } from "@/lib/activity-log";
+import { sendWelcomeEmail } from "@/lib/email";
 
 export async function registerClient(data: RegisterClientInput) {
   const validated = registerClientSchema.parse(data);
@@ -42,6 +43,7 @@ export async function registerClient(data: RegisterClientInput) {
   });
 
   await logActivity(user.id, "REGISTER", { role: "CLIENT" });
+  sendWelcomeEmail(user.email, user.name, "CLIENT").catch(() => {});
 
   return { success: true };
 }
@@ -96,6 +98,7 @@ export async function registerProvider(data: RegisterProviderInput) {
   });
 
   await logActivity(providerUser.id, "REGISTER", { role: "PROVIDER" });
+  sendWelcomeEmail(providerUser.email, providerUser.name, "PROVIDER").catch(() => {});
 
   return { success: true };
 }

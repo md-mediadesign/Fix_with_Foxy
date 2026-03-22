@@ -93,6 +93,12 @@ export default function AktivitaetslogPage() {
     }
   }, [range, fetchLogs]);
 
+  useEffect(() => {
+    if (range === "custom") return;
+    const id = setInterval(fetchLogs, 60_000);
+    return () => clearInterval(id);
+  }, [range, fetchLogs]);
+
   return (
     <div className="space-y-6">
       <div>

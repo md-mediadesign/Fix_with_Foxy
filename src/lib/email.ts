@@ -20,6 +20,50 @@ async function sendMail(to: string, subject: string, html: string) {
   await transporter.sendMail({ from: FROM, to, subject, html });
 }
 
+export async function sendPasswordResetEmail(to: string, name: string, token: string) {
+  const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/passwort-zuruecksetzen?token=${token}`;
+  await sendMail(
+    to,
+    "Passwort zurücksetzen – Fix with Foxy",
+    `
+      <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
+        <h2 style="color:#f97316">Passwort zurücksetzen</h2>
+        <p>Hallo ${name},</p>
+        <p>wir haben eine Anfrage zum Zurücksetzen deines Passworts erhalten. Klicke auf den Button, um ein neues Passwort zu setzen:</p>
+        <a href="${resetUrl}"
+           style="display:inline-block;background:#f97316;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;margin:16px 0">
+          Passwort zurücksetzen
+        </a>
+        <p style="color:#6b7280;font-size:13px">Dieser Link ist 2 Stunden gültig. Wenn du diese Anfrage nicht gestellt hast, kannst du diese E-Mail ignorieren.</p>
+        <p style="color:#6b7280;font-size:12px;margin-top:24px">Fix with Foxy · auftrag@fixwithfoxy.com</p>
+      </div>
+    `
+  );
+}
+
+export async function sendWelcomeEmail(to: string, name: string, role: "CLIENT" | "PROVIDER") {
+  const isProvider = role === "PROVIDER";
+  await sendMail(
+    to,
+    "Willkommen bei Fix with Foxy!",
+    `
+      <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
+        <h2 style="color:#f97316">Willkommen, ${name}!</h2>
+        <p>Schön, dass du dabei bist. Dein Konto bei <strong>Fix with Foxy</strong> wurde erfolgreich erstellt.</p>
+        ${isProvider
+          ? `<p>Als <strong>Dienstleister</strong> kannst du jetzt auf Aufträge in deiner Region bieten und neue Kunden gewinnen. Du startest mit einem kostenlosen 30-Tage-Test.</p>`
+          : `<p>Als <strong>Auftraggeber</strong> kannst du jetzt kostenlos Aufträge erstellen und Angebote von geprüften Handwerkern erhalten.</p>`
+        }
+        <a href="${process.env.NEXT_PUBLIC_APP_URL}/${isProvider ? "anbieter/dashboard" : "dashboard"}"
+           style="display:inline-block;background:#f97316;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;margin-top:16px">
+          Zum Dashboard
+        </a>
+        <p style="margin-top:24px;color:#6b7280;font-size:12px">Fix with Foxy · auftrag@fixwithfoxy.com</p>
+      </div>
+    `
+  );
+}
+
 export async function sendJobAwardedEmail(
   to: string,
   providerName: string,

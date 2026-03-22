@@ -89,7 +89,8 @@ model User {
   sentMessages    Message[]       @relation("SentMessages")
   notifications   Notification[]
   adminActions    AdminAction[]
-  activityLogs    UserActivityLog[]
+  activityLogs        UserActivityLog[]
+  passwordResetTokens PasswordResetToken[]
 
   @@index([email])
   @@index([role])
@@ -392,6 +393,24 @@ model Notification {
 
   @@index([userId, isRead])
   @@index([createdAt])
+}
+
+// ============================================================
+// PASSWORD RESET
+// ============================================================
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
 }
 
 // ============================================================

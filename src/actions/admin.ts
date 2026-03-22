@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
 import type { UserRole } from "@prisma/client";
 import { sendBulkWhatsApp } from "@/lib/whatsapp";
+import { logActivity } from "@/lib/activity-log";
 
 async function requireAdmin() {
   const session = await auth();
@@ -234,6 +235,8 @@ export async function resetUserPassword(userId: string, newPassword: string) {
       targetId: userId,
     },
   });
+
+  await logActivity(userId, "PASSWORD_CHANGE", { resetBy: admin.id });
 
   revalidatePath(`/admin/benutzer/${userId}`);
   return { success: true };

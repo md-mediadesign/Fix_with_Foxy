@@ -83,6 +83,11 @@ export default function AnmeldenPage() {
             </button>
           </div>
           {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>}
+          <div className="mt-1 text-right">
+            <Link href="/passwort-vergessen" className="text-xs text-blue-600 hover:underline">
+              {t.auth.forgotPassword}
+            </Link>
+          </div>
         </div>
 
         <button
