@@ -76,7 +76,7 @@ export default async function ProviderJobFeedPage({
           {t.provider.availableJobs}
         </h2>
         <p className="text-muted-foreground text-sm mb-4">
-          {t.provider.findJobsDesc ?? "Finde passende Aufträge in deiner Region und biete direkt an."}
+          {"Finde passende Aufträge in deiner Region und biete direkt an."}
         </p>
         <ProviderJobFilters
           categories={categories}

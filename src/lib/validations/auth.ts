@@ -26,12 +26,12 @@ export const registerProviderSchema = z.object({
   zipCode: z.string().optional(),
   description: z.string().optional(),
   serviceRadius: z.number().min(1).max(200),
-  services: z.array(z.string()).optional().default([]),
-  qualifications: z.array(z.string()).optional().default([]),
-  portfolioImageUrls: z.array(z.string()).optional().default([]),
+  services: z.array(z.string()).default([]),
+  qualifications: z.array(z.string()).default([]),
+  portfolioImageUrls: z.array(z.string()).default([]),
   categoryIds: z.array(z.string()).min(1, "Wähle mindestens eine Kategorie"),
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RegisterClientInput = z.infer<typeof registerClientSchema>;
-export type RegisterProviderInput = z.infer<typeof registerProviderSchema>;
+export type RegisterProviderInput = z.input<typeof registerProviderSchema>;
