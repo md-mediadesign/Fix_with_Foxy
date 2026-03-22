@@ -22,8 +22,8 @@ export default async function ProviderLayout({
   const t = await getServerTranslations();
 
   const navigation: NavigationItem[] = [
+    { href: "/anbieter/auftraege", label: t.provider.findJobs, icon: "Search", primary: true },
     { href: "/anbieter/dashboard", label: "Dashboard", icon: "LayoutDashboard" },
-    { href: "/anbieter/auftraege", label: t.provider.findJobs, icon: "Search" },
     { href: "/anbieter/meine-auftraege", label: t.provider.myJobs, icon: "Briefcase" },
     { href: "/anbieter/angebote", label: t.provider.myBids, icon: "FileText" },
     { href: "/anbieter/bewertungen", label: t.provider.reviews, icon: "Star" },

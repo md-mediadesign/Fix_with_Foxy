@@ -70,20 +70,20 @@ export default async function ProviderJobFeedPage({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">
+      {/* Hero search banner */}
+      <div className="rounded-xl bg-primary/5 border border-primary/10 px-6 py-5">
+        <h2 className="text-2xl font-bold tracking-tight mb-1">
           {t.provider.availableJobs}
         </h2>
-        <p className="text-muted-foreground">
-          {t.provider.findJobs}
+        <p className="text-muted-foreground text-sm mb-4">
+          {t.provider.findJobsDesc ?? "Finde passende Aufträge in deiner Region und biete direkt an."}
         </p>
+        <ProviderJobFilters
+          categories={categories}
+          currentCategoryId={resolvedParams.categoryId}
+          currentCity={resolvedParams.city}
+        />
       </div>
-
-      <ProviderJobFilters
-        categories={categories}
-        currentCategoryId={resolvedParams.categoryId}
-        currentCity={resolvedParams.city}
-      />
 
       {jobs.length === 0 ? (
         <Card>

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -39,6 +40,8 @@ export default function RegistrierenPage() {
   const initialTab = searchParams.get("tab") === "handwerker" ? "handwerker" : "auftraggeber";
   const [activeTab, setActiveTab] = useState<"auftraggeber" | "handwerker">(initialTab);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPasswordClient, setShowPasswordClient] = useState(false);
+  const [showPasswordProvider, setShowPasswordProvider] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const t = useTranslations();
@@ -89,7 +92,7 @@ export default function RegistrierenPage() {
     try {
       const result = await registerProvider({ ...data, categoryIds: selectedCategories });
       if (result.error) { toast.error(result.error); setIsLoading(false); return; }
-      await signIn("credentials", { email: data.email, password: data.password, callbackUrl: "/anbieter/dashboard" });
+      await signIn("credentials", { email: data.email, password: data.password, callbackUrl: "/anbieter/auftraege" });
     } catch {
       toast.error("Ein Fehler ist aufgetreten.");
       setIsLoading(false);
@@ -150,7 +153,12 @@ export default function RegistrierenPage() {
           </div>
           <div>
             <label className={labelCls}>{t.auth.password}</label>
-            <input type="password" placeholder={t.auth.passwordMinHint} autoComplete="new-password" disabled={isLoading} className={inputCls} {...registerC("password")} />
+            <div className="relative">
+              <input type={showPasswordClient ? "text" : "password"} placeholder={t.auth.passwordMinHint} autoComplete="new-password" disabled={isLoading} className={`${inputCls} pr-10`} {...registerC("password")} />
+              <button type="button" tabIndex={-1} onClick={() => setShowPasswordClient((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700">
+                {showPasswordClient ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
             {errorsC.password && <p className={errorCls}>{errorsC.password.message}</p>}
           </div>
           <div>
@@ -186,7 +194,12 @@ export default function RegistrierenPage() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className={labelCls}>{t.auth.password}</label>
-              <input type="password" placeholder={t.auth.passwordMinHint} autoComplete="new-password" disabled={isLoading} className={inputCls} {...registerP("password")} />
+              <div className="relative">
+                <input type={showPasswordProvider ? "text" : "password"} placeholder={t.auth.passwordMinHint} autoComplete="new-password" disabled={isLoading} className={`${inputCls} pr-10`} {...registerP("password")} />
+                <button type="button" tabIndex={-1} onClick={() => setShowPasswordProvider((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700">
+                  {showPasswordProvider ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
               {errorsP.password && <p className={errorCls}>{errorsP.password.message}</p>}
             </div>
             <div>

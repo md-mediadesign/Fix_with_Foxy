@@ -42,34 +42,20 @@ import {
   Loader2,
   ImagePlus,
   X,
-  Zap,
-  Droplets,
-  Paintbrush,
-  TreePine,
-  Sparkles,
-  Truck,
-  Hammer,
-  Home,
-  LayoutGrid,
-  KeyRound,
   Wrench,
-  MoreHorizontal,
 } from "lucide-react";
 import { useTranslations } from "@/components/locale-provider";
 
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Zap,
-  Droplets,
-  Paintbrush,
-  TreePine,
-  Sparkles,
-  Truck,
-  Hammer,
-  Home,
-  LayoutGrid,
-  KeyRound,
-  Wrench,
-  MoreHorizontal,
+const CATEGORY_IMAGES: Record<string, string> = {
+  reinigung: "/categories/cleaner.png",
+  "garten-landschaft": "/categories/gaertner.png",
+  "malerei-lackierung": "/categories/maler.png",
+  "montage-aufbau": "/categories/montage.jpg",
+  elektrik: "/categories/elektrik.png",
+  "sanitaer-heizung": "/categories/sanitaer.png",
+  "dach-fassade": "/categories/dach.png",
+  schluesseldienst: "/categories/schluesseldienst.png",
+  "umzug-transport": "/categories/umzug.png",
 };
 
 type Category = {
@@ -226,9 +212,7 @@ export default function NewJobPage() {
               ) : (
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                   {categories.map((category) => {
-                    const IconComp = category.icon
-                      ? iconMap[category.icon]
-                      : null;
+                    const img = CATEGORY_IMAGES[category.slug];
                     const isSelected = selectedCategoryId === category.id;
 
                     return (
@@ -236,20 +220,24 @@ export default function NewJobPage() {
                         key={category.id}
                         type="button"
                         onClick={() => setValue("categoryId", category.id)}
-                        className={`flex flex-col items-center gap-2 rounded-lg border-2 p-4 text-center transition-colors hover:bg-muted/50 ${
+                        className={`overflow-hidden rounded-xl border-2 text-left transition-all ${
                           isSelected
-                            ? "border-primary bg-primary/5"
-                            : "border-transparent bg-muted/30"
+                            ? "border-primary shadow-md"
+                            : "border-transparent bg-muted/30 hover:border-muted-foreground/30"
                         }`}
                       >
-                        {IconComp && (
-                          <IconComp
-                            className={`h-6 w-6 ${isSelected ? "text-primary" : "text-muted-foreground"}`}
-                          />
+                        {img ? (
+                          <div className="relative aspect-video bg-muted/20">
+                            <Image src={img} alt={category.name} fill className="object-contain p-1" />
+                          </div>
+                        ) : (
+                          <div className="flex aspect-video items-center justify-center bg-muted/30 text-2xl">
+                            <Wrench className="h-6 w-6 text-muted-foreground" />
+                          </div>
                         )}
-                        <span className="text-sm font-medium">
-                          {category.name}
-                        </span>
+                        <div className="p-2.5">
+                          <p className="text-xs font-semibold">{category.name}</p>
+                        </div>
                       </button>
                     );
                   })}

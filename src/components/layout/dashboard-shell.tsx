@@ -25,6 +25,7 @@ export interface NavigationItem {
   href: string;
   label: string;
   icon: string;
+  primary?: boolean;
 }
 
 interface DashboardShellProps {
@@ -80,9 +81,13 @@ export async function DashboardShell({
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                  item.primary
+                    ? "bg-primary/10 text-primary hover:bg-primary/20"
+                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                }`}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className={`h-4 w-4 ${item.primary ? "text-primary" : ""}`} />
                 {item.label}
               </Link>
             );

@@ -139,7 +139,7 @@ export async function registerProvider(data: RegisterProviderInput) {
     await signIn("credentials", {
       email: validated.email,
       password: validated.password,
-      redirectTo: "/anbieter/dashboard",
+      redirectTo: "/anbieter/auftraege",
     });
   } catch (error) {
     if (error instanceof AuthError) {
@@ -170,7 +170,7 @@ export async function loginAction(email: string, password: string) {
     user.role === "ADMIN"
       ? "/admin"
       : user.role === "PROVIDER"
-        ? "/anbieter/dashboard"
+        ? "/anbieter/auftraege"
         : "/dashboard";
 
   try {

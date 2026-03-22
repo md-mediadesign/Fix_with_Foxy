@@ -57,13 +57,13 @@ export function ProviderJobFilters({
   const hasFilters = currentCategoryId || currentCity;
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
       <div className="flex-1">
         <Select
           value={currentCategoryId ?? "all"}
           onValueChange={handleCategoryChange}
         >
-          <SelectTrigger>
+          <SelectTrigger className="h-10">
             <SelectValue placeholder="Alle Kategorien" />
           </SelectTrigger>
           <SelectContent>
@@ -78,21 +78,23 @@ export function ProviderJobFilters({
       </div>
       <div className="flex flex-1 gap-2">
         <Input
-          placeholder="Stadt suchen..."
+          className="h-10"
+          placeholder="Stadt / Region..."
           value={city}
           onChange={(e) => setCity(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") handleCitySearch();
           }}
         />
-        <Button variant="outline" size="icon" onClick={handleCitySearch}>
-          <Search className="h-4 w-4" />
+        <Button className="h-10 px-5" onClick={handleCitySearch}>
+          <Search className="mr-2 h-4 w-4" />
+          Suchen
         </Button>
       </div>
       {hasFilters && (
-        <Button variant="ghost" size="sm" onClick={clearFilters}>
+        <Button variant="ghost" size="sm" onClick={clearFilters} className="shrink-0">
           <X className="mr-1 h-4 w-4" />
-          Filter zuruecksetzen
+          Zurücksetzen
         </Button>
       )}
     </div>
