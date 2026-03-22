@@ -25,6 +25,7 @@ import Link from "next/link";
 import { getServerTranslations } from "@/lib/i18n/server";
 import { RoleSelect } from "./role-select";
 import { PasswordResetForm } from "./password-reset-form";
+import { DeleteUserButton } from "./delete-user-button";
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -154,6 +155,12 @@ export default async function BenutzerDetailPage({
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <RoleSelect userId={user.id} currentRole={user.role} />
+              <DeleteUserButton
+                userId={user.id}
+                userName={user.name}
+                targetRole={user.role}
+                currentAdminId={session.user.id}
+              />
               <Badge
                 variant="secondary"
                 className={

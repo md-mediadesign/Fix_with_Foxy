@@ -26,7 +26,7 @@ export function PasswordResetForm({ userId }: { userId: string }) {
       if (result?.error) {
         toast.error(result.error);
       } else {
-        toast.success("Passwort wurde zurückgesetzt. Der Benutzer muss es beim nächsten Login ändern.");
+        toast.success("Passwort wurde erfolgreich zurückgesetzt.");
         setPassword("");
         setConfirm("");
       }
@@ -81,7 +81,7 @@ export function PasswordResetForm({ userId }: { userId: string }) {
             />
           </div>
           <p className="text-xs text-muted-foreground">
-            Der Benutzer wird beim nächsten Login aufgefordert, das Passwort zu ändern.
+            Der Benutzer kann sich danach direkt mit dem neuen Passwort anmelden.
           </p>
           <Button type="submit" disabled={isLoading || password.length < 8}>
             {isLoading ? "Wird gesetzt…" : "Passwort zurücksetzen"}

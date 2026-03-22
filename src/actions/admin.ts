@@ -224,7 +224,7 @@ export async function resetUserPassword(userId: string, newPassword: string) {
 
   await db.user.update({
     where: { id: userId },
-    data: { passwordHash, mustChangePassword: true },
+    data: { passwordHash, mustChangePassword: false },
   });
 
   await db.adminAction.create({
@@ -240,6 +240,37 @@ export async function resetUserPassword(userId: string, newPassword: string) {
 
   revalidatePath(`/admin/benutzer/${userId}`);
   return { success: true };
+}
+
+export async function deleteUserAccount(userId: string) {
+  const admin = await requireAdmin();
+
+  const target = await db.user.findUnique({
+    where: { id: userId },
+    select: { id: true, role: true, name: true },
+  });
+
+  if (!target) return { error: "Benutzer nicht gefunden." };
+
+  // Admin accounts can only be deleted by themselves
+  if (target.role === "ADMIN" && target.id !== admin.id) {
+    return { error: "Admin-Konten können nur vom Inhaber selbst gelöscht werden." };
+  }
+
+  await db.user.delete({ where: { id: userId } });
+
+  await db.adminAction.create({
+    data: {
+      adminId: admin.id,
+      action: "DELETE_USER",
+      targetType: "User",
+      targetId: userId,
+      reason: `Account ${target.name} gelöscht`,
+    },
+  });
+
+  revalidatePath("/admin/benutzer");
+  return { success: true, selfDeleted: target.id === admin.id };
 }
 
 export async function changeUserRole(userId: string, newRole: UserRole) {
