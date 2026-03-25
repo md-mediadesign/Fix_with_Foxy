@@ -46,7 +46,7 @@ export default async function BenutzerPage({
   const search = q?.trim() || "";
   const filterRole = role && ["CLIENT", "PROVIDER", "ADMIN"].includes(role) ? role : "";
 
-  const users = await db.user.findMany({
+  const usersResult = await db.user.findMany({
     where: {
       ...(search
         ? {
@@ -64,7 +64,20 @@ export default async function BenutzerPage({
       },
     },
     orderBy: { createdAt: "desc" },
-  });
+  }).catch((e: unknown) => e instanceof Error ? e : new Error(String(e)));
+
+  if (usersResult instanceof Error) {
+    return (
+      <div className="space-y-4 p-6">
+        <h2 className="text-xl font-bold text-destructive">Datenbankfehler – Benutzer laden</h2>
+        <pre className="rounded bg-muted p-4 text-sm overflow-auto whitespace-pre-wrap">
+          {usersResult.name}: {usersResult.message}
+        </pre>
+      </div>
+    );
+  }
+
+  const users = usersResult;
 
   const roles = [
     { value: "", label: t.admin.allRoles },
