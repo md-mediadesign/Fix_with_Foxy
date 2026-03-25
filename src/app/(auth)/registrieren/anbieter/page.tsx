@@ -33,7 +33,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowRight, ArrowLeft, Eye, EyeOff, X, Upload, Plus } from "lucide-react";
+import { ArrowRight, ArrowLeft, Eye, EyeOff, X, Upload } from "lucide-react";
 import { useTranslations } from "@/components/locale-provider";
 
 type Category = {
@@ -44,7 +44,7 @@ type Category = {
 };
 
 const SERVICE_RADIUS_OPTIONS = [5, 10, 20, 25, 30, 50, 100];
-const TOTAL_STEPS = 6;
+const TOTAL_STEPS = 5;
 
 export default function AnbieterRegistrierenPage() {
   const router = useRouter();
@@ -54,10 +54,6 @@ export default function AnbieterRegistrierenPage() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [customRadius, setCustomRadius] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [services, setServices] = useState<string[]>([]);
-  const [serviceInput, setServiceInput] = useState("");
-  const [qualifications, setQualifications] = useState<string[]>([]);
-  const [qualificationInput, setQualificationInput] = useState("");
   const [portfolioImages, setPortfolioImages] = useState<{ file: File; preview: string }[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const t = useTranslations();
@@ -73,8 +69,6 @@ export default function AnbieterRegistrierenPage() {
     defaultValues: {
       serviceRadius: 25,
       categoryIds: [],
-      services: [],
-      qualifications: [],
       portfolioImageUrls: [],
     },
   });
@@ -107,36 +101,6 @@ export default function AnbieterRegistrierenPage() {
     });
   }
 
-  function addService() {
-    const trimmed = serviceInput.trim();
-    if (!trimmed || services.includes(trimmed)) return;
-    const next = [...services, trimmed];
-    setServices(next);
-    setValue("services", next);
-    setServiceInput("");
-  }
-
-  function removeService(s: string) {
-    const next = services.filter((x) => x !== s);
-    setServices(next);
-    setValue("services", next);
-  }
-
-  function addQualification() {
-    const trimmed = qualificationInput.trim();
-    if (!trimmed || qualifications.includes(trimmed)) return;
-    const next = [...qualifications, trimmed];
-    setQualifications(next);
-    setValue("qualifications", next);
-    setQualificationInput("");
-  }
-
-  function removeQualification(q: string) {
-    const next = qualifications.filter((x) => x !== q);
-    setQualifications(next);
-    setValue("qualifications", next);
-  }
-
   function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []);
     const remaining = 10 - portfolioImages.length;
@@ -166,8 +130,6 @@ export default function AnbieterRegistrierenPage() {
       if (valid) setStep(4);
     } else if (step === 4) {
       setStep(5);
-    } else if (step === 5) {
-      setStep(6);
     }
   }
 
@@ -206,8 +168,6 @@ export default function AnbieterRegistrierenPage() {
       const result = await registerProvider({
         ...data,
         categoryIds: selectedCategories,
-        services,
-        qualifications,
         portfolioImageUrls,
       });
 
@@ -265,8 +225,7 @@ export default function AnbieterRegistrierenPage() {
           {step === 2 && "Über mich"}
           {step === 3 && "Standort & Einsatzgebiet"}
           {step === 4 && "Portfolio-Bilder"}
-          {step === 5 && "Dienstleistungen"}
-          {step === 6 && "Qualifikationen & Kategorien"}
+          {step === 5 && "Kategorien"}
         </div>
       </CardHeader>
       <CardContent>
@@ -371,20 +330,6 @@ export default function AnbieterRegistrierenPage() {
                   placeholder="+49 151 12345678"
                   disabled={isLoading}
                   {...register("whatsappPhone")}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="taxNumber">
-                  Steuernummer / USt-IdNr.{" "}
-                  <span className="text-muted-foreground">({t.common.optional})</span>
-                </Label>
-                <Input
-                  id="taxNumber"
-                  type="text"
-                  placeholder="DE123456789"
-                  disabled={isLoading}
-                  {...register("taxNumber")}
                 />
               </div>
 
@@ -574,114 +519,9 @@ export default function AnbieterRegistrierenPage() {
             </>
           )}
 
-          {/* Step 5: Services */}
+          {/* Step 5: Categories */}
           {step === 5 && (
             <>
-              <div className="space-y-2">
-                <Label>
-                  Dienstleistungen{" "}
-                  <span className="text-muted-foreground">({t.common.optional})</span>
-                </Label>
-                <p className="text-sm text-muted-foreground">
-                  Füge deine Dienstleistungen als Tags hinzu (Enter zum Bestätigen).
-                </p>
-                <div className="flex gap-2">
-                  <Input
-                    type="text"
-                    placeholder="z.B. Fliesenlegen, Badezimmer"
-                    value={serviceInput}
-                    onChange={(e) => setServiceInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        addService();
-                      }
-                    }}
-                    disabled={isLoading}
-                  />
-                  <Button type="button" variant="outline" size="icon" onClick={addService} disabled={isLoading}>
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-
-              {services.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {services.map((s) => (
-                    <Badge key={s} variant="secondary" className="gap-1 pr-1">
-                      {s}
-                      <button
-                        type="button"
-                        onClick={() => removeService(s)}
-                        className="ml-1 rounded-full hover:bg-muted"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </Badge>
-                  ))}
-                </div>
-              )}
-
-              <div className="flex gap-3">
-                <Button type="button" variant="outline" className="flex-1" onClick={prevStep} disabled={isLoading}>
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  {t.common.back}
-                </Button>
-                <Button type="button" className="flex-1" onClick={nextStep} disabled={isLoading}>
-                  {t.common.next}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </>
-          )}
-
-          {/* Step 6: Qualifications & Categories */}
-          {step === 6 && (
-            <>
-              <div className="space-y-2">
-                <Label>
-                  Qualifikationen & Zertifikate{" "}
-                  <span className="text-muted-foreground">({t.common.optional})</span>
-                </Label>
-                <p className="text-sm text-muted-foreground">
-                  Füge Qualifikationen, Zertifikate oder Ausbildungen hinzu (Enter zum Bestätigen).
-                </p>
-                <div className="flex gap-2">
-                  <Input
-                    type="text"
-                    placeholder="z.B. Meister im Fliesenlegerhandwerk"
-                    value={qualificationInput}
-                    onChange={(e) => setQualificationInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        addQualification();
-                      }
-                    }}
-                    disabled={isLoading}
-                  />
-                  <Button type="button" variant="outline" size="icon" onClick={addQualification} disabled={isLoading}>
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-                {qualifications.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {qualifications.map((q) => (
-                      <Badge key={q} variant="secondary" className="gap-1 pr-1">
-                        {q}
-                        <button
-                          type="button"
-                          onClick={() => removeQualification(q)}
-                          className="ml-1 rounded-full hover:bg-muted"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </div>
-
               <div className="space-y-2">
                 <Label>{t.auth.categoriesLabel}</Label>
                 <p className="text-sm text-muted-foreground">{t.auth.categoriesDesc}</p>

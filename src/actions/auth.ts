@@ -97,13 +97,10 @@ export async function registerProvider(data: RegisterProviderInput) {
           companyName: validated.companyName || null,
           phone: validated.phone,
           whatsappPhone: validated.whatsappPhone || null,
-          taxNumber: validated.taxNumber || null,
           city: validated.city,
           zipCode: validated.zipCode ?? null,
           description: validated.description || null,
           serviceRadius: validated.serviceRadius,
-          services: validated.services ?? [],
-          qualifications: validated.qualifications ?? [],
           categories: {
             create: validated.categoryIds.map((categoryId) => ({
               categoryId,

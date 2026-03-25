@@ -21,13 +21,10 @@ export const registerProviderSchema = z.object({
   companyName: z.string().optional(),
   phone: z.string().min(5, "Telefonnummer ist erforderlich"),
   whatsappPhone: z.string().optional(),
-  taxNumber: z.string().optional(),
   city: z.string().min(2, "Stadt ist erforderlich"),
   zipCode: z.string().optional(),
   description: z.string().optional(),
   serviceRadius: z.number().min(1).max(200),
-  services: z.array(z.string()).default([]),
-  qualifications: z.array(z.string()).default([]),
   portfolioImageUrls: z.array(z.string()).default([]),
   categoryIds: z.array(z.string()).min(1, "Wähle mindestens eine Kategorie"),
 });
