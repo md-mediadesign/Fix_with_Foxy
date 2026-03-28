@@ -9,7 +9,7 @@ const FEATURED_CATEGORIES = [
   { slugKey: "reinigung", image: "/categories/cleaner.png" },
   { slugKey: "garten-landschaft", image: "/categories/gaertner.png" },
   { slugKey: "malerei-lackierung", image: "/categories/maler.png" },
-  { slugKey: "montage-aufbau", image: "/categories/montage.jpg" },
+  { slugKey: "montage-aufbau", image: "/categories/montage.png" },
   { slugKey: "elektrik", image: "/categories/elektrik.png" },
   { slugKey: "sanitaer-heizung", image: "/categories/sanitaer.png" },
   { slugKey: "dach-fassade", image: "/categories/dach.png" },

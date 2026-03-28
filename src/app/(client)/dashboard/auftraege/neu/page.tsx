@@ -50,7 +50,7 @@ const CATEGORY_IMAGES: Record<string, string> = {
   reinigung: "/categories/cleaner.png",
   "garten-landschaft": "/categories/gaertner.png",
   "malerei-lackierung": "/categories/maler.png",
-  "montage-aufbau": "/categories/montage.jpg",
+  "montage-aufbau": "/categories/montage.png",
   elektrik: "/categories/elektrik.png",
   "sanitaer-heizung": "/categories/sanitaer.png",
   "dach-fassade": "/categories/dach.png",
