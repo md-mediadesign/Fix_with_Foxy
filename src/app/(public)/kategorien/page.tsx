@@ -1,17 +1,23 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { db } from "@/lib/db";
-import {
-  Zap, Droplets, Paintbrush, TreePine, Sparkles, Truck,
-  Hammer, Home, LayoutGrid, KeyRound, Wrench, MoreHorizontal,
-} from "lucide-react";
 import { getServerTranslations } from "@/lib/i18n/server";
 
-const ICON_MAP: Record<string, React.ElementType> = {
-  Zap, Droplets, Paintbrush, TreePine, Sparkles, Truck,
-  Hammer, Home, LayoutGrid, KeyRound, Wrench, MoreHorizontal,
+const CATEGORY_IMAGES: Record<string, string> = {
+  reinigung: "/categories/cleaner.png",
+  "garten-landschaft": "/categories/gaertner.png",
+  "malerei-lackierung": "/categories/maler.png",
+  "montage-aufbau": "/categories/montage.png",
+  elektrik: "/categories/elektrik.png",
+  "sanitaer-heizung": "/categories/sanitaer.png",
+  "dach-fassade": "/categories/dach.png",
+  schluesseldienst: "/categories/schluesseldienst.png",
+  "umzug-transport": "/categories/umzug.png",
+  "schreiner-tischler": "/categories/schreiner.png",
+  "fliesen-boden": "/categories/fliesen-boden.png",
 };
 
 export default async function CategoriesPage() {
@@ -37,13 +43,17 @@ export default async function CategoriesPage() {
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {categories.map((cat) => {
-              const Icon = ICON_MAP[cat.icon || "MoreHorizontal"] || MoreHorizontal;
+              const image = CATEGORY_IMAGES[cat.slug];
               return (
                 <Link key={cat.id} href={`/registrieren/kunde?kategorie=${cat.slug}`}>
                   <Card className="group cursor-pointer transition-all hover:border-primary/30 hover:shadow-md">
                     <CardContent className="flex items-center gap-4 p-5">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 transition-transform group-hover:scale-110">
-                        <Icon className="h-6 w-6 text-primary" />
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 transition-transform group-hover:scale-110 overflow-hidden">
+                        {image ? (
+                          <Image src={image} alt={cat.name} width={48} height={48} className="h-full w-full object-cover" />
+                        ) : (
+                          <span className="text-2xl">🔧</span>
+                        )}
                       </div>
                       <div>
                         <h3 className="font-medium">{cat.name}</h3>

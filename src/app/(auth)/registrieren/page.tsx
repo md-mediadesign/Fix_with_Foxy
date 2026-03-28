@@ -31,6 +31,8 @@ const CATEGORY_IMAGES: Record<string, string> = {
   "dach-fassade": "/categories/dach.png",
   schluesseldienst: "/categories/schluesseldienst.png",
   "umzug-transport": "/categories/umzug.png",
+  "schreiner-tischler": "/categories/schreiner.png",
+  "fliesen-boden": "/categories/fliesen-boden.png",
 };
 
 

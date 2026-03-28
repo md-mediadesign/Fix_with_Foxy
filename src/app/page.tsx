@@ -15,6 +15,8 @@ const FEATURED_CATEGORIES = [
   { slugKey: "dach-fassade", image: "/categories/dach.png" },
   { slugKey: "schluesseldienst", image: "/categories/schluesseldienst.png" },
   { slugKey: "umzug-transport", image: "/categories/umzug.png" },
+  { slugKey: "schreiner-tischler", image: "/categories/schreiner.png" },
+  { slugKey: "fliesen-boden", image: "/categories/fliesen-boden.png" },
 ];
 
 export default async function LandingPage() {
