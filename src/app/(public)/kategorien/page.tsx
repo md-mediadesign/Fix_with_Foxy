@@ -20,6 +20,7 @@ const CATEGORY_IMAGES: Record<string, string> = {
   "fliesen-boden": "/categories/fliesen-boden.png",
   marketing: "/categories/marketing.png",
   mediadesign: "/categories/mediadesign.png",
+  sonstiges: "/categories/sonstiges.png",
 };
 
 export default async function CategoriesPage() {
