@@ -33,6 +33,8 @@ const CATEGORY_IMAGES: Record<string, string> = {
   "umzug-transport": "/categories/umzug.png",
   "schreiner-tischler": "/categories/schreiner.png",
   "fliesen-boden": "/categories/fliesen-boden.png",
+  marketing: "/categories/marketing.png",
+  mediadesign: "/categories/mediadesign.png",
 };
 
 
